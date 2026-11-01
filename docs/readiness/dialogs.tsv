@@ -142,7 +142,7 @@ dlg-140	wdDialogMarkCitation	463	(none)	references.markCitation	registry
 dlg-141	wdDialogMarkIndexEntry	169	(none)	references.markEntry	registry		
 dlg-142	wdDialogMarkTableOfContentsEntry	442	(none)	references.markTocEntry	registry		Mark Table of Contents Entry (Alt+Shift+O; a TC field)
 dlg-143	wdDialogMyPermission	1437	(none)		excluded		Information Rights Management (Microsoft service)
-dlg-144	wdDialogNewToolbar	586	(none)	-	registry		legacy toolbars
+dlg-144	wdDialogNewToolbar	586	(none)	tools.customizeRibbon	registry		Word 365 replaces classic toolbars with customizable ribbon tabs/groups; UI test `customize_ribbon_opens_and_the_layout_persists`
 dlg-145	wdDialogNoteOptions	373	(none)	references.noteOptions	registry		
 dlg-146	wdDialogOMathRecognizedFunctions	2165	(none)	equation.functions	registry		Recognized Functions (Equation tab › Recognized Functions…): add, delete, restore defaults; the names build up upright as functions, kept with the user's preferences
 dlg-147	wdDialogOrganizer	222	(none)	styles.organizer	registry		
@@ -187,8 +187,8 @@ dlg-185	wdDialogToolsCreateEnvelope	173	(none)	mailings.envelopes	registry
 dlg-186	wdDialogToolsCreateLabels	489	(none)	mailings.labels	registry		
 dlg-187	wdDialogToolsCustomize	152	(none)	tools.customizeRibbon	registry		
 dlg-188	wdDialogToolsCustomizeKeyboard	432	(none)	tools.customizeKeyboard	registry		
-dlg-189	wdDialogToolsCustomizeMenuBar	615	(none)	-	registry		legacy
-dlg-190	wdDialogToolsCustomizeMenus	433	(none)	-	registry		legacy
+dlg-189	wdDialogToolsCustomizeMenuBar	615	(none)	tools.customizeRibbon	registry		Word 365 has no classic menu bar; customize tabs, groups and commands through the ribbon replacement (`tools.customizeRibbon`)
+dlg-190	wdDialogToolsCustomizeMenus	433	(none)	tools.customizeRibbon	registry		Word 365 replaces classic menu customization with ribbon tabs, groups and commands (`tools.customizeRibbon`)
 dlg-191	wdDialogToolsDictionary	989	(none)	file.options	registry		Options › Proofing › Custom dictionary (add and remove words)
 dlg-192	wdDialogToolsEnvelopesAndLabels	607	(none)	mailings.envelopes	registry		
 dlg-193	wdDialogToolsGrammarSettings	885	(none)	file.options	registry		Grammar Settings (File › Options › Proofing › Writing Style: Grammar › Settings…): Capitalization, Repeated words, Word forms (a/an; Polish w/we, z/ze), Punctuation, Spacing — the kinds of rule Doc4Me checks, in English and Polish; Reset All; file.options grammarRules

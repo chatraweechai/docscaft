@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.8%; the legacy Advanced Settings dialog maps to its tested replacement; Syncthing save-in-place is verified; page-count matches are 162/222 and page-boundary matches 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 86.0%; four legacy toolbar/menu checks map to tested modern dialog replacements; Syncthing save-in-place is verified; page-count matches are 162/222 and page-boundary matches 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -16,7 +16,7 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | Ribbon/menu catalog coverage | **499 / 499 (100%)** | **measured**: `cargo xtask parity` (re-derived from `crates/engine/src/catalog.rs` against every `CommandSpec::new` id; identical to the checked-in `parity-checklist.md`) |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **85.8%** | **measured** 2026-11-01 by `cargo xtask readiness --corpus` ([readiness.md](readiness.md)): the fixed check sets and all 222 real-world documents; 88.3% without 26 deferred owner-bound checks; replaces the stale 73.4% report |
+| **Ready for real work** (full target) | **86.0%** | **measured** 2026-11-01 by `cargo xtask readiness --corpus` ([readiness.md](readiness.md)): the fixed check sets and all 222 real-world documents; 88.5% without 26 deferred owner-bound checks; replaces the stale 73.4% report |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
@@ -99,7 +99,7 @@ what still stops real work. The stage follows the full number and the core-workf
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **85.8%** (measured) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, missing dialogs, 65 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
+| Full target (ready for real work) | **86.0%** (measured) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, missing dialogs, 65 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
@@ -119,12 +119,12 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 | Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 222 real-world documents open, stay stable and preserve their measured structure through save and reopen. Pagination matches Word's page count on 161 of the 222 and every page's first/last word on 87; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
 | Product | **×0.753** | **×0.787** | |
 
-### Full target (ready for real work): 85.8% measured
+### Full target (ready for real work): 86.0% measured
 
 Measured 2026-11-01 by `cargo xtask readiness --corpus` ([readiness.md](readiness.md), check sets and rules
 in [readiness/README.md](readiness/README.md)): the weights of the dimension table over fixed
 pass/fail check sets and all 222 real-world documents. The number excluding 26 deferred rows is
-88.3%. Before the first measurement it was estimated
+88.5%. Before the first measurement it was estimated
 as the additive weighted sum over the [dimension table](#by-dimension): **0.30·68 + 0.20·60 + 0.15·55 +
 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 + 0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (range 55–63%). No
 multiplicative discounts: stability, file formats, layout and UI are weighted dimensions here.
@@ -214,7 +214,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | AI features | 0% | beyond Word for external agents | — | [gaps.md](gaps.md) | Beyond Word for external agents (MCP, CLI). No in-app AI provider: out of scope (owner decision, 2026-10-25) |
 
 **Ready for real work ≈ 0.30·68 + 0.20·60 + 0.15·55 + 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 +
-0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 85.8% now, with each dimension's measured
+0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 86.0% now, with each dimension's measured
 score in [readiness.md](readiness.md)).
 
 ## Methodology
@@ -263,6 +263,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Map classic New Toolbar, Customize Menu Bar and Customize Menus to the tested Customize Ribbon replacement; dialogs 187/228, readiness 86.0% (88.5% without deferred) |
 | 2026-11-01 | minor | Map legacy `wdDialogToolsAdvancedSettings` to the tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without deferred) |
 | 2026-11-01 | minor | Syncthing two-peer DOCX save-in-place and sync/reopen verified; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |
 | 2026-11-01 | minor | Leading page breaks in table rows no longer add a blank page; page counts improve to 162/222, page-boundary checks remain 87/222; readiness 85.4% (87.8% without deferred) |

@@ -1,6 +1,6 @@
 # Where Doc4Me falls short of Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (leading table-row page breaks no longer add a blank page; Syncthing save-in-place is verified; the legacy Advanced Settings mapping is tested; readiness is 85.8%) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (leading table-row page breaks no longer add a blank page; Syncthing save-in-place is verified; four legacy dialog mappings are tested; readiness is 86.0%) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The work list. One entry per shortfall, ranked by how much it stops a Word user from switching
 (**B** = blocks beta). Each says what's missing, the evidence, who it hurts, an Opus 5.5 agent
@@ -46,7 +46,7 @@ Native save reliability: synthetic cases on macOS reproduced loss through the pr
 
 **Beta needs #1–#7** (~150–230 h with the stability and layout work they imply): they are the
 blocking gaps, and closing them lifts layout, stability and UI, where the measured full number
-(85.8%, [readiness.md](readiness.md)) loses most of its points. Everything else is depth on the way to full parity.
+(86.0%, [readiness.md](readiness.md)) loses most of its points. Everything else is depth on the way to full parity.
 
 ## By kind
 
@@ -69,6 +69,7 @@ The same gaps grouped the way the parity documents are, for agents working in on
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Map classic New Toolbar, Customize Menu Bar and Customize Menus to the tested Customize Ribbon replacement; dialogs 187/228, readiness 86.0% (88.5% without deferred) |
 | 2026-11-01 | minor | Map legacy `wdDialogToolsAdvancedSettings` to the existing, tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without deferred) |
 | 2026-11-01 | minor | Verify Syncthing two-peer DOCX save-in-place and sync/reopen; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |
 | 2026-11-01 | minor | Leading page break no longer creates an empty page in table rows; page counts improve to 162/222, page-boundary checks remain 87/222; readiness 85.4% |
