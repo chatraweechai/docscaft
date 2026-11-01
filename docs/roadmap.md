@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-27 · **Change:** trivial (target raised to 100%; previously trivial: measured 73.4% during stage C; previously trivial: target raised to 95%; previously trivial: stage B done: readiness measured, 66.1%; previously trivial: path to 80% measured readiness; previously trivial: beta list item 5: Aptos drawn with Intos; previously trivial: Next after beta: ecosystem decisions and the in-app assistant removed; previously trivial: M1, M2, M3, M8, M11 and M12 rows match the code: window commands, Screenshot, Online Video and 3D Models landed, 618 commands; previously trivial: target is Word for Windows; command count, M14 and M15 rows corrected; previously minor: Polish interface and Polish proofing; previously trivial: M7: formatting revisions landed, #41; previously trivial: M5: Draw Table and Eraser landed, #303; previously minor: beta distance restated: ~15 points, ~150–230 h; previously: alpha gate checked: six core workflows pass; previously major: milestones moved here from ROADMAP.md; Current focus set from the re-measured gaps) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (measured readiness 85.2% on 222 corpus documents; current score and remaining work updated; prior revisions remain in the revision history) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -11,9 +11,10 @@ Opus 5.5 agent wall-clock.
 1. **Merge or close the ~45 open PRs** before starting overlapping work: many close catalog gaps
    (Clipboard pane #264, Manage Styles #270, Group #267), fix field bugs (Hebrew RTL #20, IME
    fixes #155–#164) or add languages (nb, nn, he). Owner review needed.
-2. **DOCX real-world corpus** (gap #1, 30–50 h): collect openly licensed real-world .docx files,
-   open/render/round-trip them, compare with Word locally, fix what breaks. Omitted/empty
-   paragraph defaults now have synthetic save/reopen coverage; the corpus gate remains open.
+2. **DOCX real-world fidelity** (gap #1, 30–50 h): the 222-document corpus is measured for open,
+   round-trip, stability and pagination; fix remaining fidelity failures, including the text-box
+   structure change, and compare formatting directly with Word. Omitted/empty paragraph defaults
+   also have synthetic save/reopen coverage.
 3. **Preserve what we can't render** (gap #2, 10–15 h): charts, SmartArt, OLE, ink, group shapes
    survive a round trip and show their fallback pictures.
 4. **Stability sweep** (gap #3, 20–30 h): the open crash, hang and write-failure issues, plus an
@@ -49,7 +50,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | # | Milestone | State | Remaining |
 |---|---|---|---|
 | M0 | Skeleton and vertical slice (model, layout, render, engine, Word-style UI, CLI, MCP, web) | done | — |
-| M1 | DOCX I/O | done (first version); charts, SmartArt and embedded OLE objects are read and written back; real-world corpus not started | 45–75 h |
+| M1 | DOCX I/O | corpus measured: 222/222 open, 221/222 preserve measured structure; formatting comparison and one text-box-to-image round-trip change remain | 30–50 h |
 | M2 | Home tab | done (Paste Special, Clipboard pane, Style Inspector, Manage Styles and Asian Typography landed; Dictate with whisper.cpp on the computer, 2026-10-25) | — |
 | M3 | Insert tab | done: equations (#191), icons (#309), charts, SmartArt, Screenshot › Screen Clipping, Online Video, 3D Models (as a picture), Online Pictures (Openverse), Get Add-ins (Doc4Me's own catalog) and Ink Equation landed | — |
 | M4 | Layout and Design tabs | done except column balancing, group | 6–10 h |
@@ -63,14 +64,16 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | M12 | Formats breadth (PDF, ODT, RTF, HTML, MD, TXT, LaTeX, `.doc` import) | done (first versions); encrypted `.docx` opens and saves (agile encryption); `.doc` write, encrypted `.doc`, minor formats missing | 60–100 h |
 | M13 | Performance budgets | on track (1.4 ms relayout); large real-world documents unmeasured | 10–20 h |
 | M14 | 1.0 polish, packaging, signing | Doc4Me v1.1.0 and v1.1.1 published (Windows x64 MSI and portable zip, unsigned; CI signs once the signing secrets are set); WordCraft, upstream, shipped v0.1.0–v0.4.0 on every platform | — |
-| M15 | Localization (12 key languages, RTL interface, proofing languages) | 19 UI languages; English, Polish and Thai proofing, a proofing language per run | 75–120 h |
+| M15 | Localization (12 key languages, RTL interface, proofing languages) | 30/95 catalogs meet the 95% string threshold; English, Polish and Thai proofing, a proofing language per run | 75–120 h |
 | M16 | Right-to-left and East Asian typography | RTL paragraphs done (#207) | 30–45 h |
 
 ## Path to 100% measured readiness
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
-estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** during stage C (2026-10-25,
-[`readiness.md`](readiness.md)), 26.6 points short of the target. The target is **100% ready for real work, measured**
+estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
+2026-10-25 report, and **85.2%** on 2026-11-01 (`readiness.md`, all 222 corpus documents), 14.8
+points short of the target. The current score excluding 26 deferred owner-bound checks is 87.6%.
+The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,
 never removed, so the number can't drift by editing the list.
@@ -104,7 +107,10 @@ never removed, so the number can't drift by editing the list.
 replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
-reports 100.0% on the latest commit: every row of every check set passing. Some rows can only pass
+reports 100.0% on the latest commit: every row of every check set passing. The 2026-11-01
+measurement passes stability (222/222 corpus; 5/5 hand checks) and performance (6/6); the largest
+remaining areas are pagination (55.4%), dialog checks (183/229), and localization (30/95).
+Some rows can only pass
 on the owner's hardware: the Windows field reports of stability (startup crash, freezes, saving
 without administrator rights), typing and scrolling on a Windows PC, and the printer, pen,
 microphone, scanner, touch and multi-monitor rows; the platform rows also need the Windows arm64,
@@ -128,6 +134,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); added Word's Alt+Shift+Plus outline toggle, shortcut coverage 267/280; remaining score is blocked by pagination, dialogs, localization and owner-deferred checks |
 | 2026-10-27 | trivial | Target raised from 95% to 100% measured (owner); what 100% needs |
 | 2026-10-25 | trivial | Target raised from 80% to 95% measured (owner); the rows only the owner can check |
 | 2026-10-25 | trivial | Stage C so far: measured 73.4% |

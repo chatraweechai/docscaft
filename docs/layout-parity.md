@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-25 · **Change:** trivial (Aptos drawn with the metric-compatible Intos; previously trivial: TH SarabunIT๙ drawn with Sarabun at its own size; previously minor: single line spacing from Word for Windows' font metrics; kerning and ligatures only when the run asks; TH Sarabun New/PSK/IT๙ drawn with Sarabun on their own metrics; Thai counting list numbers; previously trivial: Thai, Lao and Khmer wrap between dictionary words; Thai list numbers; previously trivial: complex-script shaping and Myanmar line breaking, #604; body page totals, table-cell footnotes and bookmark link pages fixed, #450 #451 #455; previously major: first version; line breaking, pagination and object placement checked against Word's behaviour from the layout source on origin/main) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (recorded corpus pagination checks: 160/222 page counts and 86/222 page-break checks pass; the remaining layout gap is measured rather than untested) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -8,9 +8,10 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`typing-parity.md`](typing-parity.md); the reading and writing of the properties is in
 [`file-format-parity.md`](file-format-parity.md).
 
-**Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements most of Word's layout
-rules, but nothing has been compared page-for-page with Word on real documents, and the default
-font can't match Word's metrics.
+**Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
+most of Word's layout rules; the 2026-11-01 real-world corpus measurement matches Word's page count
+for 160/222 documents and every page's first and last word for 86/222. The remaining layout gap is
+substantial, and direct visual comparison on the remaining cases is still needed.
 
 ## Checklist
 
@@ -78,6 +79,7 @@ font can't match Word's metrics.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Recorded complete-corpus pagination measurement: 160/222 page counts and 86/222 page-break checks pass; remaining fidelity work is measured, not an unstarted harness |
 | 2026-10-25 | trivial | Default font metrics row: Aptos and Aptos Display drawn with the bundled Intos and Intos Display (measured: same advances, 387/387 line breaks) |
 | 2026-10-25 | trivial | TH SarabunIT๙ row removed from the metric-matched fonts: drawn with Sarabun at its own size, announced on open |
 | 2026-10-15 | minor | Single line spacing from Word for Windows' metrics (usWin + external leading; Sarabun 1.853 em); kerning only with `w:kern`, ligatures only with `w14:ligatures`; TH Sarabun New/PSK/IT๙ drawn with Sarabun at their own height, widths, kerning and line spacing; Thai counting list labels; Thai Distributed tested |

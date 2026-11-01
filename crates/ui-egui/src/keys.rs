@@ -107,12 +107,6 @@ pub fn combo(m: Modifiers, key: &str, with_shift: bool) -> String {
 /// Find and run the command bound to this key. Returns true if handled.
 fn dispatch(app: &mut WordApp, key: Key, m: Modifiers) -> bool {
     let Some(name) = key_name(key) else { return false };
-    // Alt+Shift+Minus is Nonbreaking Hyphen in Microsoft's list but still collapses a heading in
-    // Outline view.
-    if app.session.view.mode == doc4me_engine::layout::ViewMode::Outline && combo(m, name, true) == "Alt+Shift+-" {
-        let _ = app.run("outline.collapse", json!({}));
-        return true;
-    }
     let reg = app.session.registry.clone();
     if let Some(spec) = app.session.keymap.resolve(&reg, &combo(m, name, true)) {
         let _ = app.run(spec.id, json!({}));

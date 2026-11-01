@@ -255,8 +255,8 @@ ks-253	Outline a document	Demote a paragraph.	Alt+Shift+Right arrow key	Alt+Shif
 ks-254	Outline a document	Demote the paragraph to body text.	Ctrl+Shift+N			duplicate	ks-133	same shortcut and action as ks-133
 ks-255	Outline a document	Move the selected paragraphs up.	Alt+Shift+Up arrow key	Alt+Shift+Up	para.moveUp	registry		
 ks-256	Outline a document	Move the selected paragraphs down.	Alt+Shift+Down arrow key	Alt+Shift+Down	para.moveDown	registry		
-ks-257	Outline a document	Expand the text under a heading.	Alt+Shift+Plus sign (+)	Alt+Shift+=	outline.expand	registry		
-ks-258	Outline a document	Collapse the text under a heading.	Alt+Shift+Plus sign (+)	Alt+Shift+=	outline.collapse	registry		published as Alt+Shift+Plus (same as Expand); Doc4Me collapses with Alt+Shift+-
+ks-257	Outline a document	Expand the text under a heading.	Alt+Shift+Plus sign (+)	Alt+Shift+=	outline.toggle	registry		published as Alt+Shift+Plus; the same shortcut expands or collapses the selected heading according to its state
+ks-258	Outline a document	Collapse the text under a heading.	Alt+Shift+Plus sign (+)	Alt+Shift+=	outline.toggle	registry		published as Alt+Shift+Plus; the same shortcut expands or collapses the selected heading according to its state
 ks-259	Outline a document	Expand or collapse all text or headings.	Alt+Shift+A	Alt+Shift+A	outline.showAll	registry		
 ks-260	Outline a document	Hide or display the character formatting.	Forward slash (/) (on the numeric keypad)	numpad /	-	manual	deferred	deferred 2026-10-27 (owner: skip until asked): a numeric keypad on the owner's Windows PC
 ks-261	Outline a document	Switch between showing the first line of body text and showing all body text.	Alt+Shift+L	Alt+Shift+L	outline.firstLineOnly	registry		outline.firstLineOnly

@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-25 · **Change:** trivial (the dimension note says what the real-world corpus checks; previously trivial: the encryption row split: encrypted `.docx` opens and saves, encrypted `.doc` is refused, as the code does; previously trivial: independent complex-script formatting inheritance and round-trip regression tests; previously trivial: import/export fixes for TXT, RTF, ODT, HTML and LaTeX, #433–#440; previously major: first version; every format Word reads or writes, measured from the readers and writers on origin/main) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet), plus Word for Windows' extra formats
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (updated the 222-document corpus results: 221/222 preserve measured structure; formatting comparison with Word remains open) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -8,10 +8,12 @@ write: Word opens it showing the same). Summary in [`target-app-parity.md`](targ
 the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
-gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared with Word
-on real-world files. What is checked (2026-10-25, `cargo xtask readiness`): all 222 real-world
-documents open, and 221 keep their text and make-up through save and reopen. DOCX dominates the weight: a Word user sends and receives .docx; everything else is
-occasional.
+gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
+with Word on real-world files. What is checked (2026-11-01, `cargo xtask readiness --corpus`): all
+222 documents open and remain stable, 221 preserve measured structure through save and reopen,
+and 160 match Word's page count; the separate page-break check passes 86/222. One round-trip
+changes a text box into an image. DOCX dominates the weight: a Word user sends and receives .docx;
+everything else is occasional.
 
 ## Formats
 
@@ -20,7 +22,7 @@ Weights are the share of a Word user's file traffic (estimate). Read/write: ✅ 
 
 | Format | Weight | Word | Doc4Me read | Doc4Me write | Fidelity | Hours | How it's tested | Notes |
 |---|---|---|---|---|---|---|---|---|
-| `.docx` Word Document (ECMA-376 Transitional) | 70% | R/W | ✅ | ✅ | ~65% | 70–110 | `crates/docx/tests` (roundtrip 34, fixtures 29, malformed 8, bidi 5, citations 5); synthetic fixtures only | Word opens our files. Untested on a real-world corpus. Details below |
+| `.docx` Word Document (ECMA-376 Transitional) | 70% | R/W | ✅ | ✅ | ~65% | 70–110 | `crates/docx/tests` and the 222-document corpus (`cargo xtask readiness --corpus`) | All open; 221/222 preserve measured structure through round-trip; formatting not directly compared with Word. Details below |
 | `.docx` Strict Open XML | 1% | R/W | ✅ (namespace mapping in `xml.rs`) | ❌ | ~60% | 2–4 | one fixture | Writing Strict is rare |
 | `.docm` / `.dotx` / `.dotm` | 3% | R/W | ✅ | ✅ | ~65% | incl. above | `macro_packages.rs` | Macros and signatures kept on save (#172); macros never run |
 | `.doc` Word 97-2003 (and `.dot`) | 8% | R/W | 🟡 | ❌ | ~60% | 25–40 | `crates/docbin/src/tests.rs`, `tests/drawing.rs` (56) | Spec-based reader ([MS-DOC]): text, formatting, styles, sections, headers/footers, tables, lists, notes, fields, bookmarks; inline and floating pictures (PNG, JPEG, DIB, TIFF, EMF, WMF; Macintosh PICT as a sized placeholder) with crop, alt text, position and wrap; basic shapes, lines, groups and text boxes ([MS-ODRAW]). Freeform shapes, z-order and Word 6/95 or encrypted files are dropped or refused. No writer |
@@ -109,7 +111,8 @@ Word PDFs and measurements remain local under ignored `plan/word/`; they are not
 These checks cover preservation on Word reopen, not Doc4Me pagination parity.
 The [public OOXML reference](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.paragraphpropertiesdefault?view=openxml-3.0.1)
 describes omission as leaving paragraph defaults application-defined. Real-world corpus
-coverage and Doc4Me layout matching remain separate gaps.
+round-trip is measured; direct comparison of Doc4Me's rendered formatting with Word remains a
+separate gap.
 ## Custom XML store preservation
 A reduced original bound-control DOCX loses its backing data, item properties and relationship
 on main, both without editing and after unrelated edits. Main's content-control support (#381)
@@ -131,8 +134,10 @@ Synthetic CLI cases and `engine/tests/safe_save.rs` cover occupied names, links,
 Windows/Linux runtime behavior, ACLs and extended metadata, real disk-full conditions, power loss and network filesystems are not verified by these tests. The containing directory is not explicitly synchronized. Cleanup can fail when storage or permissions change, and process termination can leave a temporary file. No Word observation was needed for this filesystem change; it makes no new format-fidelity claim.
 ## What decides beta for formats
 
-1. A **real-world DOCX corpus** opened, rendered and round-tripped, compared page by page with
-   Word (local only: Word output can't be committed; keep a manifest and our own renders).
+1. **Close the measured real-world DOCX gaps**: inspect the one text-box-to-image structure change,
+   compare formatting directly with Word locally, and fix proven discrepancies. The corpus now
+   opens, round-trips and checks pagination for 222 Word-reference documents (see
+   [`readiness.md`](readiness.md)); Word output stays local and is never committed.
 2. **Preserve what we can't render**: ink and drawing canvases survive a round trip
    (keep the parts and the run). Charts, SmartArt and OLE objects do (#292, #319).
 3. Move tracking (`w:moveFrom`/`w:moveTo`) read and written (formatting revisions: #41; content controls: #381).
@@ -163,6 +168,7 @@ raise readiness estimates. No Word-derived files are fixtures.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Full readiness corpus: all 222 documents open and remain stable, 221/222 retain measured structure, 160/222 page counts and 86/222 page breaks match; one text box is emitted as an image; formatting comparison remains open |
 | 2026-10-25 | trivial | Dimension note: 222 real-world documents open and 221 keep their text and make-up through save and reopen (`cargo xtask readiness`); formatting still not compared, estimate unchanged |
 | 2026-10-11 | trivial | Independent complex-script size, bold and italic inherit correctly through defaults and styles; explicit equal values survive; six synthetic multi-generation round-trip tests, including tracked formatting, added |
 | 2026-10-11 | minor | Opening files from the system: file associations and the default-app button (#295) |

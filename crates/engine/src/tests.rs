@@ -4517,10 +4517,13 @@ fn outline_show_level_filters_paragraphs() {
     let reg = cmd::registry();
     assert_eq!(reg.by_shortcut("Alt+Shift+1").map(|c| c.id), Some("outline.showLevel1"));
     assert_eq!(reg.by_shortcut("Alt+Shift+A").map(|c| c.id), Some("outline.showAll"));
-    assert_eq!(reg.by_shortcut("Alt+Shift+=").map(|c| c.id), Some("outline.expand"));
-    // Alt+Shift+Minus is Nonbreaking Hyphen in Microsoft's list; the front end collapses with it
-    // in Outline view.
+    assert_eq!(reg.by_shortcut("Alt+Shift+=").map(|c| c.id), Some("outline.toggle"));
     assert_eq!(reg.by_shortcut("Alt+Shift+-").map(|c| c.id), Some("text.nbHyphen"));
+    s.sel = crate::Selection::caret(Pos::body(0, 0));
+    run(&mut s, "outline.toggle", json!({}));
+    assert_eq!(outline_shown(&mut s), vec![0, 4, 5]);
+    run(&mut s, "outline.toggle", json!({}));
+    assert_eq!(outline_shown(&mut s), vec![0, 1, 2, 3, 4, 5]);
     run(&mut s, "outline.close", json!({}));
     assert!(s.run("outline.showLevel1", &json!({})).is_err());
 }

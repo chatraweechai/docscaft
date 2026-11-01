@@ -69,22 +69,17 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(LEVEL),
         CommandSpec::new("outline.moveUp", "Move Up", "Outlining › Outline Tools", |s, _| s.run("para.moveUp", &json!({}))),
         CommandSpec::new("outline.moveDown", "Move Down", "Outlining › Outline Tools", |s, _| s.run("para.moveDown", &json!({}))),
-        CommandSpec::new("outline.expand", "Expand", "Outlining › Outline Tools", |s, v| expand(s, v, false))
-            .key("Alt+Shift+=")
-            .params(BLOCK)
-            .when(in_outline)
-            .pure(),
-        // Alt+Shift+Minus is Nonbreaking Hyphen in Microsoft's list; Outline view still collapses
-        // with it (the front end sends it here there).
+        CommandSpec::new("outline.expand", "Expand", "Outlining › Outline Tools", |s, v| expand(s, v, false)).params(BLOCK).when(in_outline).pure(),
         CommandSpec::new("outline.collapse", "Collapse", "Outlining › Outline Tools", |s, v| collapse(s, v, false))
             .params(BLOCK)
             .when(in_outline)
             .pure(),
-        // Double-clicking a heading's symbol: all of it collapsed, or all of it expanded.
+        // Double-clicking a heading's symbol or Word's shortcut toggles all of its descendants.
         CommandSpec::new("outline.toggle", "Expand or Collapse Heading", "Outlining › Outline Tools", |s, v| {
             let collapsed = targets(s, v).first().is_some_and(|h| s.view.outline.collapsed.iter().any(|(i, _)| i == h));
             if collapsed { expand(s, v, true) } else { collapse(s, v, true) }
         })
+        .key("Alt+Shift+=")
         .params(BLOCK)
         .when(in_outline)
         .pure(),
