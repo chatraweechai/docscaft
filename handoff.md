@@ -1,10 +1,10 @@
-# Handoff: Doc4Me 1.1.1 · readiness 85.4% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
+# Handoff: Doc4Me 1.1.1 · readiness 85.7% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
 
-อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 13 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
+อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 14 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
 
-## สถานะปัจจุบัน (2026-11-01 รอบที่ 13)
+## สถานะปัจจุบัน (2026-11-01 รอบที่ 14)
 
-### Readiness ล่าสุด: 85.4% (วัดครบ 222 เอกสาร, 2026-11-01)
+### Readiness ล่าสุด: 85.7% (วัดครบ 222 เอกสาร, 2026-11-01)
 
 | มิติ | น้ำหนัก | คะแนน | ชุดตรวจ |
 |---|---:|---:|---|
@@ -16,10 +16,12 @@
 | ประสิทธิภาพ | 0.05 | 100.0% | 6/6 |
 | ภาษา | 0.04 | 31.6% | 30/95 |
 | แพลตฟอร์ม | 0.03 | 80.0% | 4/5 (Windows arm64 deferred) |
-| ระบบเสริม | 0.02 | 66.7% | 4/6 (1 ยังไม่ทดสอบ, 1 deferred) |
+| ระบบเสริม | 0.02 | 83.3% | 5/6 (1 deferred; Syncthing eco-003 ผ่าน) |
 | ฮาร์ดแวร์ | 0.01 | 37.5% | 3/8 (5 owner-deferred) |
 
-คะแนนเมื่อไม่นับ 26 แถว deferred = 87.8%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. `dlg-040` ถูกตัดออกจาก check set เพราะเป็น Macintosh-only ตามเอกสารอ้างอิง ไม่ใช่การทำเครื่องหมายผ่าน. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
+คะแนนเมื่อไม่นับ 26 แถว deferred = 88.2%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. `dlg-040` ถูกตัดออกจาก check set เพราะเป็น Macintosh-only ตามเอกสารอ้างอิง ไม่ใช่การทำเครื่องหมายผ่าน. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
+
+รอบนี้ยืนยัน `eco-003` ด้วย Syncthing 2.1.7 สอง peer บน loopback-only: Doc4Me สร้าง DOCX ในโฟลเดอร์ A, sync ไป B, เปิดและบันทึกทับไฟล์เดิมจาก B แล้วตรวจว่าไฟล์ที่เปิดซ้ำจากทั้งสอง peer มี edits จากทั้งคู่. ปิด global/local discovery, relay, NAT และ crash reporting ระหว่างทดสอบ; ล้าง whitespace ใน `encryptionPassword` ของ template เพื่อให้ cluster-config มี device info ครบ. บันทึกแถวเป็น `pass`; Nextcloud Desktop ไม่ได้ทดสอบแยก เพราะเกณฑ์ระบุ Syncthing หรือ Nextcloud อย่างใดอย่างหนึ่ง. readiness ใหม่ 85.7% (88.2% ไม่มี deferred), ecosystem 5/6.
 
 รอบนี้แก้ `crates/layout/src/lib.rs`/`table.rs` ให้ข้ามชิ้นแรกที่เกิดจากการแยกแถวตารางเฉพาะเมื่อทุก cluster เป็น page-break marker; เดิมตรวจ `Line::vis` ซึ่งว่างสำหรับบรรทัด LTR ทำให้เสี่ยงทิ้งข้อความจริง. เพิ่ม/คง regression สำหรับ `a_leading_page_break_in_a_table_row_does_not_leave_a_blank_page` และ `table_rows_keep_with_next_and_page_breaks_in_cells`; ทดสอบ layout 235 ผ่านเมื่อข้าม 3 test ที่ขึ้นกับฟอนต์ไทยใน Windows profile, suite เต็ม 235 ผ่านแต่ 3 fail เพราะ TH Sarabun New/PSK ติดตั้งอยู่และทำให้ test fallback ล้ม. `cargo clippy` ของ 6 crates, `cargo fmt --all -- --check`, release build และ `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` ผ่าน; corpus ครบ 222 ไฟล์ readiness 85.4%, page counts 162/222, page breaks 87/222. `govuk-003` มีจำนวนหน้าเท่ากับ reference (5) แต่ page-boundary check ยังไม่ผ่าน จึงไม่เปลี่ยนสถานะ check. `cargo xtask ci` ยังติด workspace Clippy จาก unused import ใน `apps/doc4me/src/screen_clip.rs` และ `chunks_exact_to_as_chunks` ใน `apps/doc4me/src/dictate.rs` ซึ่งอยู่นอก diff นี้; dialogs 183/228, localization 30/95 และ ecosystem 4/6 (หนึ่งรายการยังไม่ทดสอบและหนึ่ง deferred) ยังคงเป็นช่องว่าง.
 
@@ -58,7 +60,7 @@
 - `062d409` ฝัง Intos และ Intos Display (OFL, github.com/muglug/intos) แทน Aptos/Aptos Display — วัดเทียบไฟล์ Aptos จริงแล้วตรงทุกความกว้าง (ตัดบรรทัดตรง 387/387) ตัวอื่นที่ใกล้ที่สุดคือ Lato 35.7%; แผนความพร้อม 80% ใน `docs/roadmap.md`; handoff นี้ — CI run 40191882219 ผ่าน (build, MSI และ zip)
 - ขั้น A เสร็จ (คอมมิต `cargo xtask readiness` ชุดล่าสุดบน `main`): เครื่องวัด `xtask/src/readiness.rs`, ชุดตรวจใน `docs/readiness/` (กติกาใน `README.md`), คลังเอกสารจริง 244 แถวนับ 222 (GOV.UK 72 OGL v3 + Zenodo 172 CC; 22 แถว GOV.UK เป็นคนละฉบับจึง `excluded`) ผลอยู่ที่ `docs/readiness.md` — CI run 40195346897 ของ `52d83ba` ผ่าน
 - ขั้น B เสร็จ: `ROADMAP.md` และเอกสาร parity ใช้ค่าวัด 66.1% แทนค่าประมาณ ~60% (รายละเอียดใน CHANGELOG `[Unreleased]` หมวดเปลี่ยนแปลง)
-- หมายเหตุ: รายละเอียดขั้น C และคะแนน 73.4% ในบรรทัดถัดไปเป็นประวัติ ณ 2026-10-25 ไม่ใช่สถานะล่าสุด; ผลปัจจุบัน 85.4% อยู่ในส่วนสถานะปัจจุบันด้านบน
+- หมายเหตุ: รายละเอียดขั้น C และคะแนน 73.4% ในบรรทัดถัดไปเป็นประวัติ ณ 2026-10-25 ไม่ใช่สถานะล่าสุด; ผลปัจจุบัน 85.7% อยู่ในส่วนสถานะปัจจุบันด้านบน
 - ขั้น C (เป้า 100% — ผู้ใช้ปรับจาก 95% เมื่อ 2026-10-27) กำลังทำ — ค่าวัดล่าสุด **73.4%** (`530f4cc`, ตารางด้านล่าง): `e1678b9` ระยะย่อหน้าแบบค่าที่มากกว่า + ระยะบรรทัด Aptos 1.2207 em, `eca31e8` ตัวแบ่งหน้าท้ายย่อหน้าและ Ctrl+Enter แบบ Word, `530f4cc` บรรทัดที่มีแต่รูปไม่บวก descent (จำนวนหน้าตรง 127 → 153, ต้น-ท้ายทุกหน้า 46 → 63), `1e00303` คีย์ลัดตามรายการของ Microsoft (ผ่าน 145 → 218/280), `10e228f` ข้อความหน้าจอทุก 18 ภาษาครอบคลุม 100% (ภาษาที่ผ่าน 6 → 19 จาก 95), แพ็กเกจ Linux และรุ่นเว็บผ่าน (plat-004, plat-005), `cafd5bf` `33146e8` `00e984e` กล่องโต้ตอบแบบ Word เพิ่ม 23 แถว (127 → 150/229: Break, Mark TOC Entry, Accept/Reject Changes, Highlight Changes, List Commands, Modify Style › Format ×5, Drawing Grid, Compatibility Options, Font Substitution, Insert Rows/Cells, Number, Placeholder และแถวที่มีกล่องอยู่แล้ว); เครื่องมือเทียบตำแหน่งบรรทัดกับ PDF ของ Word อยู่ใน scratchpad ของ session (ydrift.py ใช้ `pdftotext -bbox-layout`) ไม่ได้อยู่ใน repo
 - ขั้น C ที่พบแต่ยังไม่ได้แก้ (การจัดหน้า): ฟอนต์ที่ไม่มีในเครื่อง Word เลือกตัวแทนจาก `w:altName` และ `w:family` (roman/swiss/modern) ใน `fontTable.xml` ซึ่ง Doc4Me ยังไม่อ่าน (เช่น govuk-010 Bembo → Times New Roman แต่เราใช้ฟอนต์ sans); เอกสารหลายไฟล์คลาดตั้งแต่ต้นหน้าเพราะความสูงของหัวกระดาษ (govuk-018 +21.7 pt, govuk-024 +15.4 pt, zenodo-025 +5.5 pt)
 

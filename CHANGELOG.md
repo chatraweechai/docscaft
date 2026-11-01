@@ -330,6 +330,7 @@
 
 ### เปลี่ยนแปลง
 
+- **ยืนยันการทำงานกับโฟลเดอร์ที่ซิงก์ผ่าน Syncthing** (`docs/readiness/manual.tsv`, `docs/readiness.md`): ใช้ Syncthing 2.1.7 สอง peer บน loopback โดยปิด discovery/relay/NAT; สร้าง DOCX ที่ peer A, ตรวจ sync ไป B, เปิดและบันทึกทับไฟล์เดิมด้วย Doc4Me CLI บน B แล้วเปิดซ้ำทั้งสองฝั่งและตรวจว่าการแก้ไขจากทั้ง peer อยู่ครบ; การทดสอบครั้งแรกพบว่า test harness ส่ง whitespace ใน default encryption-password placeholders จน cluster config ถูกปฏิเสธ จึงล้าง placeholder และทดสอบใหม่; ไม่ต้องใช้ Nextcloud เพราะเกณฑ์ระบุ Nextcloud Desktop หรือ Syncthing; ไม่มีการเปลี่ยนโค้ด/ไฟล์ .docx/installer/ภาษาไทย; ecosystem ผ่าน 5/6 (1 deferred), readiness 85.7% (88.2% เมื่อตัด 26 deferred); ตรวจ: round-trip จริงด้วย `doc4me-cli run --template sample`, `doc4me-cli run --file ... --save ...`, `doc4me-cli text` ที่ทั้งสอง peer และ `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` ผ่านครบ 222 เอกสาร
 - **บันทึกผล soak test 8 ชั่วโมง (stab-001) เป็นผ่าน** (`docs/readiness/manual.tsv` แถว stab-001)
   - `cargo xtask window soak --hours 8 --checkpoint 15` (แอปที่ build จาก 1fece99 บน Xvfb) แก้ไขพร้อม AutoSave รวม 8.0 ชั่วโมง: 25,140 การกระทำ, 32 จุดตรวจ ไฟล์ที่บันทึกตรงกับข้อความในหน้าต่างทุกจุด (ไม่ตรง 0 ครั้ง) และหลังฆ่าโปรแกรมครั้งสุดท้ายไฟล์ AutoSave ตรงกับข้อความล่าสุด (28,864 ตัวอักษร) — รายงาน `target/window-runs/soak.out` `pass: true`
   - บันทึกตามจริงว่าไม่ได้รันรวดเดียว: worker ของ session รีสตาร์ตหยุดการรันหลังนาทีที่ 150, 180, 285, 405 และ 465 แต่ละครั้ง `--resume` เปิดไฟล์ AutoSave แล้วพบว่าตรงกับสถานะที่บันทึก (reopenMatchesFile true) จึงทำต่อจากนั้น; ความพยายามก่อนหน้าที่หยุดเพราะดิสก์เต็ม (2026-10-26 05:50) ไม่นับ
@@ -660,7 +661,7 @@
 
 ### ข้อจำกัดที่ทราบ
 
-- **การซิงก์ผ่าน cloud folder ยังไม่ผ่านการยืนยัน (`eco-003`)**: Syncthing 2.1.7 สอง peer บน loopback สร้าง encrypted connection ได้ แต่ปฏิเสธ cluster configuration; ไม่ได้ยืนยันการเปิด/บันทึกทับ DOCX ด้วย Doc4Me แล้ว sync/reopen ที่อีก peer, Nextcloud Desktop ยังไม่ได้ทดสอบ จึงคงสถานะ `untested` และไม่นับ readiness ว่าผ่าน
+- **Nextcloud Desktop ไม่ได้ทดสอบแยกต่างหาก**: `eco-003` ผ่านแล้วด้วย Syncthing 2.1.7 แบบสอง peer หลังยืนยัน Doc4Me save-in-place และ sync/reopen ครบทั้งสองฝั่ง; เกณฑ์นี้ยอมรับ Nextcloud Desktop หรือ Syncthing อย่างใดอย่างหนึ่ง
 - **`cargo xtask ci` ยังติด workspace Clippy ที่โค้ดเดิมนอกงานนี้**: `apps/doc4me/src/screen_clip.rs` มี unused import และ `apps/doc4me/src/dictate.rs` ใช้ `chunks_exact` ที่ Clippy รุ่นนี้เตือน; fmt และ Clippy ของ 6 crates ที่เปลี่ยนผ่านแล้ว แต่ CI หยุดก่อน test/assets/layers/wasm
 - กรอบข้อความ: ย่อหน้าในกรอบที่มีเชิงอรรถหรืออ้างอิงท้ายเรื่องยังแสดงในลำดับข้อความ (เชิงอรรถวางท้ายหน้าได้เฉพาะจากลำดับข้อความ); กรอบไม่แตกข้ามหน้าและไม่วางในเซลล์ตารางหรือกล่องข้อความ (Word ก็ไม่อนุญาต); ตำแหน่ง Inside/Outside ยังไม่สลับตามหน้าคู่-คี่; Remove Frame บนย่อหน้าที่ได้กรอบจากสไตล์ยกเลิกกรอบได้ในโปรแกรมแต่ไฟล์ .docx ไม่มีวิธีบันทึกการยกเลิกนั้น จึงกลับเป็นกรอบของสไตล์เมื่อเปิดใหม่ (ยกเลิกกรอบในสไตล์เองผ่าน Modify Style บันทึกได้ถูกต้อง)
 - คลังทดสอบ pagination: **govuk-009 ผ่านทั้ง page-count และ page-boundary checks** หลังรองรับ `w:gridBefore`/`w:gridAfter`; แก้ leading page break ในแถวตารางเพื่อให้ govuk-003 มี 5 หน้าเท่ากับ reference แต่ page-boundary check ของเอกสารนี้ยังไม่ผ่าน; ผลล่าสุดของ corpus คือ 162/222 page counts และ 87/222 page-boundary checks

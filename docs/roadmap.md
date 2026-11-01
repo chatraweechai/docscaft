@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.4%; leading page breaks in table rows no longer add blank pages; page-count passes improve by one, page-boundary passes remain 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.7%; Syncthing save-in-place and two-peer sync are verified; page-count passes are 162/222 and page-boundary passes 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -71,8 +71,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **85.4%** on 2026-11-01 (`readiness.md`, all 222 corpus documents; DOCX open and round-trip 222/222), 14.6
-points short of the target. The current score excluding 26 deferred owner-bound checks is 87.8%.
+2026-10-25 report, and **85.7%** on 2026-11-01 (`readiness.md`, all 222 corpus documents; DOCX open and round-trip 222/222), 14.3
+points short of the target. The current score excluding 26 deferred owner-bound checks is 88.2%.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,
@@ -138,6 +138,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Verify eco-003 with Syncthing 2.1.7: save-in-place on peer B synced to peer A and both edits reopened; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |
 | 2026-11-01 | minor | Skip only leading table-row split pieces containing page-break clusters; govuk-003 page count now matches (5) without changing its still-failing page-boundary check; corpus page counts 162/222, page breaks 87/222; readiness 85.4% (87.8% without deferred) |
 | 2026-11-01 | minor | `w:gridBefore`/`w:gridAfter` support fixes govuk-009 pagination; corpus passes rise to 161/222 page counts and 87/222 page breaks; readiness 85.4% (87.8% without 26 deferred) |
 | 2026-11-01 | minor | Readiness 85.3% (87.7% without 26 deferred); exclude Macintosh-only dlg-040; zero-size frame markers stay in page flow; Syncthing ecosystem check remains untested |

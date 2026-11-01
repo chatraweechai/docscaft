@@ -1,8 +1,8 @@
 # Doc4Me roadmap
 
-**Stage: alpha** · ready for real work **85.4%, measured** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, 2026-11-01); the target is 100% measured (raised from 95% by the owner, 2026-10-27), 14.6 points away · 87.8% without 26 deferred owner-bound checks · next: beta, the blocking gaps #1–#7, ~150–230 h away
+**Stage: alpha** · ready for real work **85.7%, measured** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, 2026-11-01); the target is 100% measured (raised from 95% by the owner, 2026-10-27), 14.3 points away · 88.2% without 26 deferred owner-bound checks · next: beta, the blocking gaps #1–#7, ~150–230 h away
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.4%; row grid omissions are preserved and leading table-row page breaks no longer leave a blank page; page-count checks are 162/222 while page-break checks remain 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.7%; Syncthing save-in-place and two-peer sync are verified; page-count checks are 162/222 while page-break checks remain 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -16,7 +16,7 @@ agent control. This page is the summary; the assessment is
 |---|---|---|
 | Ribbon/menu catalog coverage | **499 / 499 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md)) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
-| **Ready for real work** (full target) | **85.4%** | measured 2026-11-01: `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail check sets and all 222 real-world documents with Word-made reference PDFs; 87.8% excluding 26 deferred rows; replaces the stale 73.4% report |
+| **Ready for real work** (full target) | **85.7%** | measured 2026-11-01: `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail check sets and all 222 real-world documents with Word-made reference PDFs; 88.2% excluding 26 deferred rows; replaces the stale 73.4% report |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
@@ -35,13 +35,13 @@ discounts and the user evidence (120 issues from outside users, 4 praise, 0 "swi
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **85.4%** (measured) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, missing dialogs, 65 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
+| Full target (ready for real work) | **85.7%** (measured) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, missing dialogs, 65 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
 **Why alpha:** the core workflows (write, format, styles, lists, tables, references, review, mail
 merge, open and save .docx) work end to end and ship as an unsigned Windows x64 MSI and portable
-zip (CI signs once the owner adds a certificate; no other platform is packaged yet). **Why not beta:** all 222 corpus documents open, remain stable and preserve their measured structure through save and reopen. Pagination matches Word's page count on 161 documents and the first/last word on every page on 87; 65 of 95 interface-language checks, 45 dialog checks and several shortcut checks do not pass. Printing remains non-native. Gaps #1–#7 in [`docs/gaps.md`](docs/gaps.md)
+zip (CI signs once the owner adds a certificate; no other platform is packaged yet). **Why not beta:** all 222 corpus documents open, remain stable and preserve their measured structure through save and reopen. Pagination matches Word's page count on 162 documents and the first/last word on every page on 87; 65 of 95 interface-language checks, 45 dialog checks and several shortcut checks do not pass. Printing remains non-native. Gaps #1–#7 in [`docs/gaps.md`](docs/gaps.md)
 are the beta list. All six core workflows pass the
 [alpha gate](docs/roadmap.md#alpha-gate-core-workflows) end to end on macOS (checked in WordCraft, not re-run on Windows yet), with save and reopen;
 the two partial ones (real-world .docx, printing) complete, roughly.
@@ -63,7 +63,7 @@ one, checks that real-world documents open and keep their text and make-up, not 
 | Performance | 75% | 100.0% (6/6) | 10–20 | [layout-parity.md](docs/layout-parity.md#performance) |
 | Stability | 50% | 100.0% (corpus 222/222; hand checks 5/5) | 25–45 | [gaps.md](docs/gaps.md) (#3) |
 | Platforms | 95% (beyond Word on Linux, BSD, web) | 80.0% (4/5; Windows arm64 deferred) | 5–10 | this page |
-| Ecosystem and plugins | Microsoft's systems (VBA, Office add-ins, OneDrive, co-authoring) out of scope since 2026-10-25; open replacements in place: macros, Doc4Me add-in catalog, synced folders (Nextcloud, Syncthing) | 66.7% (4/6; one not run, one deferred) | — | [gaps.md](docs/gaps.md) (#22) |
+| Ecosystem and plugins | Microsoft's systems (VBA, Office add-ins, OneDrive, co-authoring) out of scope since 2026-10-25; open replacements in place: macros, Doc4Me add-in catalog, synced folders (Nextcloud, Syncthing) | 83.3% (5/6; one deferred) | — | [gaps.md](docs/gaps.md) (#22) |
 | AI features | beyond Word for external agents (MCP, CLI); no in-app AI provider (out of scope since 2026-10-25) | — (not weighted) | — | [gaps.md](docs/gaps.md) (#25) |
 
 ## Features
@@ -122,7 +122,7 @@ Proofing: English and Polish (spelling, grammar, hyphenation), chosen per run fr
 
 Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadmap.md)):
 
-0. Raise measured readiness from 85.4% (66.1% at first; 73.4% in the stale 2026-10-25 report) to 100%: fix what `cargo xtask readiness` fails, most
+0. Raise measured readiness from 85.7% (66.1% at first; 73.4% in the stale 2026-10-25 report) to 100%: fix what `cargo xtask readiness` fails, most
    points first: pagination (6.7 points open), dialogs (3.0), interface languages (2.7), then
    the remaining formats, shortcuts, platform, ecosystem and hardware checks; 26 deferred rows
    remain owner-bound ([results](docs/readiness.md),
@@ -146,6 +146,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-01 | Verified `eco-003` with Syncthing 2.1.7: Doc4Me created a DOCX in peer A's synced folder, opened and saved it in place on peer B, and both edits were verified after sync/reopen. Ecosystem is 5/6 (one deferred); readiness rises to 85.7% (88.2% without 26 deferred). |
 | 2026-11-01 | Fixed a leading page break in a table row creating a blank page; `govuk-003` now matches the reference page count (5), while its page-boundary check remains different. Full corpus readiness remains 85.4% (87.8% without 26 deferred); page counts rise to 162/222 and page breaks remain 87/222. |
 | 2026-11-01 | Added `w:gridBefore`/`w:gridAfter` row support through the DOCX model, round-trip, layout, editing and text-format conversion; govuk-009 now passes both pagination checks. Full corpus readiness rises to 85.4% (87.8% without 26 deferred), page counts to 161/222 and page breaks to 87/222. |
 | 2026-11-01 | Fixed zero-size Word frame markers that grouped long runs of paragraphs into one floating frame; zenodo-030 improved from 16 to 34 pages (Word: 32) but the exact-corpus score remains 160/222 page counts and 86/222 page-break checks. Excluded dlg-040 because its published definition is Macintosh-only, changing dialogs from 183/229 to 183/228 and readiness from 85.2% to 85.3% (87.7% without 26 deferred). Syncthing 2.1.7 peers connected, but their cluster config was rejected; eco-003 remains untested. |
