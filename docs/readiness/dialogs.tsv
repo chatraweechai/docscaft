@@ -175,7 +175,7 @@ dlg-173	wdDialogTableWrapping	854	(none)	table.positioning	registry		Table Posit
 dlg-174	wdDialogTCSCTranslator	1156	(none)	-	registry		Chinese conversion
 dlg-175	wdDialogTextToTable	127	(none)	table.fromText	registry		
 dlg-176	wdDialogToolsAcceptRejectChanges	506	(none)	review.acceptReject	registry		Accept or Reject Changes
-dlg-177	wdDialogToolsAdvancedSettings	206	(none)	-	registry		legacy
+dlg-177	wdDialogToolsAdvancedSettings	206	(none)	file.options	registry		Legacy Advanced Settings maps to File › Options › Advanced (`file.options`, `pane=advanced`; UI test `options_panes_open_and_change_settings`)
 dlg-178	wdDialogToolsAutoCorrect	378	(none)	tools.autocorrect	registry		
 dlg-179	wdDialogToolsAutoCorrectExceptions	762	(none)	tools.autocorrect	registry		AutoCorrect › Exceptions… (first letter)
 dlg-180	wdDialogToolsAutoManager	915	(none)	tools.autocorrect	registry		
