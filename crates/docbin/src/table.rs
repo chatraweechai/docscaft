@@ -248,6 +248,8 @@ pub(crate) fn assemble(paras: Vec<ParaOut>) -> Blocks {
             props: RowProps {
                 height: info.height,
                 height_rule: info.height_rule,
+                grid_before: 0,
+                grid_after: 0,
                 header: info.header,
                 cant_split: info.cant_split,
                 fmt_change: None,

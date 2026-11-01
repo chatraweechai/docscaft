@@ -293,7 +293,7 @@ fn styles_and_lists_round_trip() {
 
 #[test]
 fn tables_with_merges_round_trip() {
-    let mut t = Table::new(3, 3, 468.0);
+    let mut t = Table::new(3, 5, 468.0);
     t.props.width = Some(468.0);
     t.props.align = Some(Align::Center);
     t.props.indent = Some(5.0);
@@ -303,8 +303,18 @@ fn tables_with_merges_round_trip() {
     t.props.look = TableLook { header_row: true, total_row: true, banded_rows: false, first_column: false, last_column: true, banded_columns: true };
     t.props.shading = Some(Rgb(1, 1, 1));
     t.props.caption = Some("Sales".into());
-    t.rows[0].props = RowProps { height: Some(20.0), height_rule: HeightRule::Exact, header: true, cant_split: true, fmt_change: None };
+    t.rows[0].props = RowProps {
+        height: Some(20.0),
+        height_rule: HeightRule::Exact,
+        grid_before: 0,
+        grid_after: 0,
+        header: true,
+        cant_split: true,
+        fmt_change: None,
+    };
     t.rows[1].props = RowProps { height: Some(15.0), height_rule: HeightRule::AtLeast, ..Default::default() };
+    t.rows[1].cells.pop();
+    t.rows[1].props.grid_after = 1;
     t.merge(0, 0, 0, 1); // horizontal
     t.merge(1, 2, 2, 2); // vertical
     {
@@ -322,6 +332,8 @@ fn tables_with_merges_round_trip() {
     // Nested table in a cell (followed by the required paragraph).
     let inner = Table::new(1, 2, 100.0);
     t.rows[2].cells[0].blocks = vec![Arc::new(Block::Table(inner)), para_block(Paragraph::new())];
+    t.rows[2].cells.pop();
+    t.rows[2].props.grid_before = 1;
     let mut d = Document::new();
     d.body = vec![para_block(Paragraph::with_text("before", CharProps::default())), Arc::new(Block::Table(t.clone())), para_block(Paragraph::new())];
     let r = rt(&d);

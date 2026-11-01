@@ -86,20 +86,36 @@ impl Table {
     }
 
     pub fn cols(&self) -> usize {
-        self.grid.len().max(self.rows.iter().map(|r| r.cells.iter().map(Cell::span).sum::<usize>()).max().unwrap_or(0))
+        self.grid.len().max(
+            self.rows
+                .iter()
+                .map(|r| {
+                    (r.props.grid_before.min(MAX_COLS as u32) as usize)
+                        .saturating_add(r.cells.iter().map(Cell::span).fold(0usize, usize::saturating_add))
+                        .saturating_add(r.props.grid_after.min(MAX_COLS as u32) as usize)
+                })
+                .max()
+                .unwrap_or(0),
+        )
     }
 
     /// Grid column where cell `c` of row `r` starts.
     pub fn grid_col(&self, r: usize, c: usize) -> usize {
-        self.rows.get(r).map(|row| row.cells.iter().take(c).map(Cell::span).sum()).unwrap_or(0)
+        self.rows
+            .get(r)
+            .map(|row| {
+                (row.props.grid_before.min(MAX_COLS as u32) as usize)
+                    .saturating_add(row.cells.iter().take(c).map(Cell::span).fold(0usize, usize::saturating_add))
+            })
+            .unwrap_or(0)
     }
 
     /// Cell index in row `r` that covers grid column `g`.
     pub fn cell_at_grid(&self, r: usize, g: usize) -> Option<usize> {
         let row = self.rows.get(r)?;
-        let mut x = 0;
+        let mut x = row.props.grid_before.min(MAX_COLS as u32) as usize;
         for (i, c) in row.cells.iter().enumerate() {
-            if g < x + c.span() {
+            if g >= x && g < x + c.span() {
                 return Some(i);
             }
             x += c.span();
@@ -141,7 +157,21 @@ impl Table {
         let w = self.grid.get(g.min(self.grid.len().saturating_sub(1))).copied().unwrap_or(72.0);
         self.grid.insert(g, w);
         for r in 0..self.rows.len() {
-            let mut x = 0;
+            let mut x = self.rows.get(r).map_or(0, |row| row.props.grid_before.min(MAX_COLS as u32) as usize);
+            if g < x {
+                if let Some(row) = self.rows.get_mut(r) {
+                    row.props.grid_before = (x + 1).min(MAX_COLS) as u32;
+                }
+                continue;
+            }
+            let row_end = self.rows.get(r).map_or(x, |row| x.saturating_add(row.cells.iter().map(Cell::span).fold(0usize, usize::saturating_add)));
+            let grid_after = self.rows.get(r).map_or(0, |row| row.props.grid_after.min(MAX_COLS as u32) as usize);
+            if g >= row_end && g < row_end.saturating_add(grid_after) {
+                if let Some(row) = self.rows.get_mut(r) {
+                    row.props.grid_after = row.props.grid_after.saturating_add(1).min(MAX_COLS as u32);
+                }
+                continue;
+            }
             let mut idx = None;
             if let Some(row) = self.rows.get(r) {
                 for (i, c) in row.cells.iter().enumerate() {
@@ -185,7 +215,17 @@ impl Table {
         }
         self.grid.remove(g);
         for row in &mut self.rows {
-            let mut x = 0;
+            let mut x = row.props.grid_before.min(MAX_COLS as u32) as usize;
+            if g < x {
+                row.props.grid_before = (x - 1) as u32;
+                continue;
+            }
+            let row_end = x.saturating_add(row.cells.iter().map(Cell::span).fold(0usize, usize::saturating_add));
+            let grid_after = row.props.grid_after.min(MAX_COLS as u32) as usize;
+            if g >= row_end && g < row_end.saturating_add(grid_after) {
+                row.props.grid_after -= 1;
+                continue;
+            }
             let mut rm = None;
             for (i, c) in row.cells.iter_mut().enumerate() {
                 if g < x + c.span() {
@@ -417,5 +457,31 @@ mod tests {
         v.merge(0, 2, 0, 0);
         assert_eq!(v.rows[0].cells[0].props.vmerge, VMerge::Restart);
         assert_eq!(v.rows[2].cells[0].props.vmerge, VMerge::Continue);
+    }
+
+    #[test]
+    fn grid_before_offsets_cells_and_column_edits() {
+        let mut t = Table::new(1, 3, 300.0);
+        t.rows[0].cells.pop();
+        t.rows[0].props.grid_before = 1;
+        assert_eq!(t.cols(), 3);
+        assert_eq!(t.grid_col(0, 0), 1);
+        assert_eq!(t.cell_at_grid(0, 0), None);
+        assert_eq!(t.cell_at_grid(0, 1), Some(0));
+
+        t.insert_col(0);
+        assert_eq!(t.rows[0].props.grid_before, 2);
+        assert_eq!(t.grid_col(0, 0), 2);
+        t.delete_col(0);
+        assert_eq!(t.rows[0].props.grid_before, 1);
+        assert_eq!(t.grid_col(0, 0), 1);
+
+        t.rows[0].props.grid_after = 1;
+        t.grid.push(100.0);
+        assert_eq!(t.cols(), 4);
+        t.insert_col(3);
+        assert_eq!(t.rows[0].props.grid_after, 2);
+        t.delete_col(3);
+        assert_eq!(t.rows[0].props.grid_after, 1);
     }
 }

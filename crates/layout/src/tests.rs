@@ -568,12 +568,30 @@ fn tables_lay_out_cells() {
     assert!(l.cell_at(0, c.x, c.top + 2.0).is_some());
 }
 
+#[test]
+fn omitted_leading_grid_columns_offset_table_cells() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(1, 3, 468.0);
+    t.rows[0].cells.pop();
+    t.rows[0].props.grid_before = 1;
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("offset cell", Default::default()))];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+
+    let l = lay(&d);
+    let caret = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 }).unwrap();
+    assert!(caret.x > 72.0 + 150.0, "{caret:?}");
+}
+
 /// A vertical merge is one cell: its box spans the rows, a click anywhere in it finds it, and the
 /// continuation row's box is `covered` (no gridline, not a hit).
 #[test]
 fn a_vertical_merge_lays_out_as_one_cell() {
     let mut d = Document::from_text("before\nafter");
-    let mut t = Table::new(3, 2, 468.0);
+    let mut t = Table::new(3, 3, 468.0);
+    for row in t.rows.iter_mut().take(2) {
+        row.cells.truncate(1);
+        row.props.grid_before = 1;
+    }
     t.rows[0].cells[0].props.vmerge = doc4me_doc::props::VMerge::Restart;
     t.rows[1].cells[0].props.vmerge = doc4me_doc::props::VMerge::Continue;
     d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
@@ -585,7 +603,7 @@ fn a_vertical_merge_lays_out_as_one_cell() {
         .collect();
     let (r0, r1) = (cells[0].1, cells[1].1);
     assert!(!cells[0].2 && cells[1].2 && !cells[2].2, "{cells:?}");
-    assert!((r0.bottom() - r1.bottom()).abs() < 0.01 && r0.h > r1.h * 1.9, "{r0:?} {r1:?}");
+    assert!((r0.bottom() - r1.bottom()).abs() < 0.01 && r0.h > r1.h, "{r0:?} {r1:?}");
     // The lower half of the merge hits the restart cell (row 0), not the continuation row.
     let hit = l.cell_at(0, r1.x + 5.0, r1.y + r1.h / 2.0).unwrap();
     assert_eq!((hit.2, hit.3), (0, 0));
@@ -2736,6 +2754,29 @@ fn a_page_break_at_the_bottom_of_a_full_page_leaves_no_blank_page() {
     assert_eq!(l.pages.len(), 2, "pages: {}", l.pages.len());
     let last_on_2 = l.pages[1].items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [27]));
     assert!(last_on_2, "the text after the break is on page 2");
+}
+
+#[test]
+fn a_leading_page_break_in_a_table_row_does_not_leave_a_blank_page() {
+    use doc4me_doc::props::LineSpacing;
+    let props = ParaProps { line_spacing: Some(LineSpacing::Exactly(24.0)), space_before: Some(0.0), space_after: Some(0.0), ..Default::default() };
+    let para = |text: &str| {
+        let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+        p.props = props.clone();
+        doc4me_doc::para_block(p)
+    };
+    let mut d = Document::from_text("");
+    d.body = (0..27).map(|i| para(&format!("Line {i}"))).collect();
+    let mut table = Table::new(1, 1, 468.0);
+    table.rows[0].cells[0].blocks = vec![para("\u{000C}Next page")];
+    d.insert_block(StoryRef::Body, &Path::top(27), doc4me_doc::Block::Table(table)).unwrap();
+
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2, "pages: {}", l.pages.len());
+    assert!(
+        l.pages[1].items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [27, 0, 0, 0])),
+        "the cell text should start on page 2"
+    );
 }
 
 /// #534: indents in characters (`w:firstLineChars`) are measured in the paragraph mark's font

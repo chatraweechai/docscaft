@@ -1,16 +1,16 @@
-# Handoff: Doc4Me 1.1.1 · readiness 85.3% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
+# Handoff: Doc4Me 1.1.1 · readiness 85.4% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
 
-อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 12 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
+อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 13 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
 
-## สถานะปัจจุบัน (2026-11-01 รอบที่ 12)
+## สถานะปัจจุบัน (2026-11-01 รอบที่ 13)
 
-### Readiness ล่าสุด: 85.3% (วัดครบ 222 เอกสาร, 2026-11-01)
+### Readiness ล่าสุด: 85.4% (วัดครบ 222 เอกสาร, 2026-11-01)
 
 | มิติ | น้ำหนัก | คะแนน | ชุดตรวจ |
 |---|---:|---:|---|
 | ฟีเจอร์ | 0.30 | 90.1% | ribbon 499/499; dialogs 183/228 (12 deferred; dlg-040 excluded: Macintosh-only) |
 | รูปแบบไฟล์ | 0.20 | 100.0% | เปิด 222/222; round-trip 222/222 |
-| การจัดหน้า | 0.15 | 55.4% | จำนวนหน้าตรง 160/222; คำต้น/ท้ายตรง 86/222 |
+| การจัดหน้า | 0.15 | 56.1% | จำนวนหน้าตรง 162/222; คำต้น/ท้ายตรง 87/222 |
 | UI/UX | 0.10 | 95.7% | shortcuts 268/280 (7 deferred) |
 | ความเสถียร | 0.10 | 100.0% | corpus 222/222; hand checks 5/5 |
 | ประสิทธิภาพ | 0.05 | 100.0% | 6/6 |
@@ -19,7 +19,11 @@
 | ระบบเสริม | 0.02 | 66.7% | 4/6 (1 ยังไม่ทดสอบ, 1 deferred) |
 | ฮาร์ดแวร์ | 0.01 | 37.5% | 3/8 (5 owner-deferred) |
 
-คะแนนเมื่อไม่นับ 26 แถว deferred = 87.7%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. `dlg-040` ถูกตัดออกจาก check set เพราะเป็น Macintosh-only ตามเอกสารอ้างอิง ไม่ใช่การทำเครื่องหมายผ่าน. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
+คะแนนเมื่อไม่นับ 26 แถว deferred = 87.8%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. `dlg-040` ถูกตัดออกจาก check set เพราะเป็น Macintosh-only ตามเอกสารอ้างอิง ไม่ใช่การทำเครื่องหมายผ่าน. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
+
+รอบนี้แก้ `crates/layout/src/lib.rs`/`table.rs` ให้ข้ามชิ้นแรกที่เกิดจากการแยกแถวตารางเฉพาะเมื่อทุก cluster เป็น page-break marker; เดิมตรวจ `Line::vis` ซึ่งว่างสำหรับบรรทัด LTR ทำให้เสี่ยงทิ้งข้อความจริง. เพิ่ม/คง regression สำหรับ `a_leading_page_break_in_a_table_row_does_not_leave_a_blank_page` และ `table_rows_keep_with_next_and_page_breaks_in_cells`; ทดสอบ layout 235 ผ่านเมื่อข้าม 3 test ที่ขึ้นกับฟอนต์ไทยใน Windows profile, suite เต็ม 235 ผ่านแต่ 3 fail เพราะ TH Sarabun New/PSK ติดตั้งอยู่และทำให้ test fallback ล้ม. `cargo clippy` ของ 6 crates, `cargo fmt --all -- --check`, release build และ `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` ผ่าน; corpus ครบ 222 ไฟล์ readiness 85.4%, page counts 162/222, page breaks 87/222. `govuk-003` มีจำนวนหน้าเท่ากับ reference (5) แต่ page-boundary check ยังไม่ผ่าน จึงไม่เปลี่ยนสถานะ check. `cargo xtask ci` ยังติด workspace Clippy จาก unused import ใน `apps/doc4me/src/screen_clip.rs` และ `chunks_exact_to_as_chunks` ใน `apps/doc4me/src/dictate.rs` ซึ่งอยู่นอก diff นี้; dialogs 183/228, localization 30/95 และ ecosystem 4/6 (หนึ่งรายการยังไม่ทดสอบและหนึ่ง deferred) ยังคงเป็นช่องว่าง.
+
+รอบนี้เพิ่ม `w:gridBefore`/`w:gridAfter` ใน row model, DOCX reader/writer, table layout, cell/column helpers และ flow conversion เพื่อไม่เลื่อน cell ที่ขาด grid columns ต้น/ท้ายแถวไปยังคอลัมน์ผิด; govuk-009 ผ่าน page-count และ page-break check หลังแก้. วัด corpus ครบ 222 เอกสาร: readiness 85.4% (87.8% เมื่อตัด deferred), pagination 161/222 และ 87/222. ผ่าน `cargo fmt --all -- --check`, model (118 tests), DOCX (75 unit + 49 round-trip), docbin, formats (70), layout regression, engine table tests (36) และ Clippy ของ 6 crates. `cargo xtask readiness --download --corpus --jobs 4 --cli target/release/doc4me-cli.exe` ผ่าน; `cargo xtask ci` หยุดที่ workspace Clippy จาก unused import ใน `apps/doc4me/src/screen_clip.rs` และ lint `chunks_exact_to_as_chunks` ใน `apps/doc4me/src/dictate.rs` ซึ่งอยู่นอก diff นี้ จึงไม่ถึง gates ที่เหลือ. ยังไม่ถึงเป้าหมาย 100%, โดย dialogs และ localization ยังเป็นช่องว่างหลัก และ Nextcloud/Syncthing ยังไม่มีหลักฐานผ่าน.
 
 รอบนี้แก้ `crates/layout/src/lib.rs` ให้ `w:framePr` marker ของ Word ที่มีค่า auto/zero-size ตามรูปแบบที่พบใน corpus อยู่ใน page flow แทนการรวมเป็น floating frame เดียว; เพิ่ม regression test ใน `crates/layout/src/tests.rs`. `zenodo-030` กลับมาแสดงเนื้อหาที่เคยถูกตัดและจำนวนหน้าเพิ่มจาก 16 เป็น 34 (Word 32) แต่ยังไม่ผ่าน exact page-count; aggregate pagination คงเดิมที่ 160/222 และ 86/222. `cargo xtask readiness --corpus --jobs 4 --cli target/release/doc4me-cli.exe` วัดครบ 222 เอกสารและ readiness เป็น 85.3%. Layout suite แบบข้าม 3 test ผ่าน 233 tests; suite เต็มมี 3 failures เพราะ test เหล่านั้นคาดว่า TH Sarabun New/PSK จะไม่ติดตั้งเพื่อทดสอบ fallback แต่ Windows profile นี้มี TH Sarabun New ติดตั้งอยู่; fmt และ Clippy ของ layout ผ่าน. `cargo xtask ci` หยุดที่ workspace Clippy เพราะข้อผิดพลาดเดิมใน `apps/doc4me/src/screen_clip.rs` และ `apps/doc4me/src/dictate.rs` (ไม่อยู่ใน diff นี้) จึงยังไม่ถึง test/assets/layers/wasm gates.
 
@@ -54,7 +58,7 @@
 - `062d409` ฝัง Intos และ Intos Display (OFL, github.com/muglug/intos) แทน Aptos/Aptos Display — วัดเทียบไฟล์ Aptos จริงแล้วตรงทุกความกว้าง (ตัดบรรทัดตรง 387/387) ตัวอื่นที่ใกล้ที่สุดคือ Lato 35.7%; แผนความพร้อม 80% ใน `docs/roadmap.md`; handoff นี้ — CI run 40191882219 ผ่าน (build, MSI และ zip)
 - ขั้น A เสร็จ (คอมมิต `cargo xtask readiness` ชุดล่าสุดบน `main`): เครื่องวัด `xtask/src/readiness.rs`, ชุดตรวจใน `docs/readiness/` (กติกาใน `README.md`), คลังเอกสารจริง 244 แถวนับ 222 (GOV.UK 72 OGL v3 + Zenodo 172 CC; 22 แถว GOV.UK เป็นคนละฉบับจึง `excluded`) ผลอยู่ที่ `docs/readiness.md` — CI run 40195346897 ของ `52d83ba` ผ่าน
 - ขั้น B เสร็จ: `ROADMAP.md` และเอกสาร parity ใช้ค่าวัด 66.1% แทนค่าประมาณ ~60% (รายละเอียดใน CHANGELOG `[Unreleased]` หมวดเปลี่ยนแปลง)
-- หมายเหตุ: รายละเอียดขั้น C และคะแนน 73.4% ในบรรทัดถัดไปเป็นประวัติ ณ 2026-10-25 ไม่ใช่สถานะล่าสุด; ผลปัจจุบัน 85.3% อยู่ในส่วนสถานะปัจจุบันด้านบน
+- หมายเหตุ: รายละเอียดขั้น C และคะแนน 73.4% ในบรรทัดถัดไปเป็นประวัติ ณ 2026-10-25 ไม่ใช่สถานะล่าสุด; ผลปัจจุบัน 85.4% อยู่ในส่วนสถานะปัจจุบันด้านบน
 - ขั้น C (เป้า 100% — ผู้ใช้ปรับจาก 95% เมื่อ 2026-10-27) กำลังทำ — ค่าวัดล่าสุด **73.4%** (`530f4cc`, ตารางด้านล่าง): `e1678b9` ระยะย่อหน้าแบบค่าที่มากกว่า + ระยะบรรทัด Aptos 1.2207 em, `eca31e8` ตัวแบ่งหน้าท้ายย่อหน้าและ Ctrl+Enter แบบ Word, `530f4cc` บรรทัดที่มีแต่รูปไม่บวก descent (จำนวนหน้าตรง 127 → 153, ต้น-ท้ายทุกหน้า 46 → 63), `1e00303` คีย์ลัดตามรายการของ Microsoft (ผ่าน 145 → 218/280), `10e228f` ข้อความหน้าจอทุก 18 ภาษาครอบคลุม 100% (ภาษาที่ผ่าน 6 → 19 จาก 95), แพ็กเกจ Linux และรุ่นเว็บผ่าน (plat-004, plat-005), `cafd5bf` `33146e8` `00e984e` กล่องโต้ตอบแบบ Word เพิ่ม 23 แถว (127 → 150/229: Break, Mark TOC Entry, Accept/Reject Changes, Highlight Changes, List Commands, Modify Style › Format ×5, Drawing Grid, Compatibility Options, Font Substitution, Insert Rows/Cells, Number, Placeholder และแถวที่มีกล่องอยู่แล้ว); เครื่องมือเทียบตำแหน่งบรรทัดกับ PDF ของ Word อยู่ใน scratchpad ของ session (ydrift.py ใช้ `pdftotext -bbox-layout`) ไม่ได้อยู่ใน repo
 - ขั้น C ที่พบแต่ยังไม่ได้แก้ (การจัดหน้า): ฟอนต์ที่ไม่มีในเครื่อง Word เลือกตัวแทนจาก `w:altName` และ `w:family` (roman/swiss/modern) ใน `fontTable.xml` ซึ่ง Doc4Me ยังไม่อ่าน (เช่น govuk-010 Bembo → Times New Roman แต่เราใช้ฟอนต์ sans); เอกสารหลายไฟล์คลาดตั้งแต่ต้นหน้าเพราะความสูงของหัวกระดาษ (govuk-018 +21.7 pt, govuk-024 +15.4 pt, zenodo-025 +5.5 pt)
 

@@ -1143,6 +1143,10 @@ pub struct RowProps {
     /// Points (meaning depends on `height_rule`).
     pub height: Option<f32>,
     pub height_rule: HeightRule,
+    /// Number of leading grid columns omitted from this row (`w:gridBefore`).
+    pub grid_before: u32,
+    /// Number of trailing grid columns omitted from this row (`w:gridAfter`).
+    pub grid_after: u32,
     /// Repeat as a header row at the top of each page.
     pub header: bool,
     /// Don't let the row break across pages.

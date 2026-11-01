@@ -246,7 +246,7 @@ fn autofit(s: &mut Session, v: &Value) -> CmdResult {
 pub(crate) fn sync_cell_widths(t: &mut Table) {
     let grid = t.grid.clone();
     for row in &mut t.rows {
-        let mut g = 0usize;
+        let mut g = row.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
         for c in &mut row.cells {
             let span = c.span();
             let w: f32 = grid.get(g..g.saturating_add(span).min(grid.len())).unwrap_or(&[]).iter().sum();

@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.3% after excluding one Macintosh-only dialog; zero-size Word frame markers now stay in page flow; remaining work updated) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness is 85.4%; leading page breaks in table rows no longer add blank pages; page-count passes improve by one, page-boundary passes remain 87/222) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -71,8 +71,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **85.3%** on 2026-11-01 (`readiness.md`, all 222 corpus documents; DOCX open and round-trip 222/222), 14.7
-points short of the target. The current score excluding 26 deferred owner-bound checks is 87.7%.
+2026-10-25 report, and **85.4%** on 2026-11-01 (`readiness.md`, all 222 corpus documents; DOCX open and round-trip 222/222), 14.6
+points short of the target. The current score excluding 26 deferred owner-bound checks is 87.8%.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,
@@ -109,9 +109,11 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The 2026-11-01
 measurement passes stability (222/222 corpus; 5/5 hand checks) and performance (6/6); the largest
-remaining areas are pagination (55.4%), dialog checks (183/228), and localization (30/95). A
-zero-size Word frame-marker fix restores page flow in zenodo-030 (34 pages versus Word's 32), but
-does not yet change the aggregate pagination checks.
+remaining areas are pagination (56.1%), dialog checks (183/228), and localization (30/95). The
+corpus now matches Word's page count for 162/222 documents and page boundaries for 87/222; the
+leading table-row page-break fix removes a blank page in govuk-003, but its page-boundary check
+still differs. A zero-size Word frame-marker fix restores page flow in zenodo-030 (34 pages versus
+Word's 32).
 Some rows can only pass
 on the owner's hardware: the Windows field reports of stability (startup crash, freezes, saving
 without administrator rights), typing and scrolling on a Windows PC, and the printer, pen,
@@ -136,6 +138,8 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Skip only leading table-row split pieces containing page-break clusters; govuk-003 page count now matches (5) without changing its still-failing page-boundary check; corpus page counts 162/222, page breaks 87/222; readiness 85.4% (87.8% without deferred) |
+| 2026-11-01 | minor | `w:gridBefore`/`w:gridAfter` support fixes govuk-009 pagination; corpus passes rise to 161/222 page counts and 87/222 page breaks; readiness 85.4% (87.8% without 26 deferred) |
 | 2026-11-01 | minor | Readiness 85.3% (87.7% without 26 deferred); exclude Macintosh-only dlg-040; zero-size frame markers stay in page flow; Syncthing ecosystem check remains untested |
 | 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); DOCX round-trip 222/222; shortcuts 268/280 after Alt+Shift+F10 available-actions menu; remaining score is blocked by pagination, dialogs and localization |
 | 2026-10-27 | trivial | Target raised from 95% to 100% measured (owner); what 100% needs |

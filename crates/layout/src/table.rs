@@ -153,7 +153,7 @@ pub fn measure_table_columns(doc: &doc4me_doc::Document, t: &Table) -> Vec<(f32,
     let mut spanned: Vec<(usize, usize, f32, f32)> = Vec::new();
     let mut budget = MEASURE_BUDGET;
     'rows: for (ri, row) in t.rows.iter().enumerate() {
-        let mut g = 0usize;
+        let mut g = row.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
         for cell in &row.cells {
             let span = cell.span();
             let margins = cell.props.margins.unwrap_or(margins_def);
@@ -411,7 +411,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     let mut rows: Vec<Vec<CellBox>> = Vec::with_capacity(nrows);
     let mut heights: Vec<f32> = Vec::with_capacity(nrows);
     for (ri, row) in t.rows.iter().enumerate() {
-        let mut g = 0usize;
+        let mut g = row.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
         let mut cells = Vec::with_capacity(row.cells.len());
         let mut rh = 0.0f32;
         // The tallest cell margins plus border bands in the row.
@@ -581,7 +581,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         .rows
         .iter()
         .map(|r| {
-            let mut gx = 0;
+            let mut gx = r.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
             r.cells
                 .iter()
                 .filter_map(|x| {
@@ -724,6 +724,27 @@ pub fn page_break_cut(row: &RowLayout) -> Option<f32> {
         }
     }
     cut.filter(|c| *c > 0.01 && *c < row.height - 0.01)
+}
+
+pub fn only_page_breaks(row: &RowLayout) -> bool {
+    let mut has_page_break = false;
+    for item in &row.items {
+        match item {
+            Placed::Lines { para, l0, l1, .. } => {
+                for line in para.lines.get(*l0..*l1).unwrap_or(&[]) {
+                    for cluster in para.clusters.get(line.c0..line.c1).unwrap_or(&[]) {
+                        if cluster.kind != crate::para::ClKind::PageBreak {
+                            return false;
+                        }
+                    }
+                    has_page_break |= line.end == LineEnd::PageBreak;
+                }
+            }
+            Placed::Image { .. } | Placed::Shape { .. } | Placed::Graphic { .. } | Placed::Clip { .. } | Placed::Object { .. } => return false,
+            _ => {}
+        }
+    }
+    has_page_break
 }
 
 pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
@@ -943,7 +964,7 @@ fn column_content(ctx: &mut Ctx, t: &Table, style: Option<&TableStyleProps>, dep
     let mut spanning = Vec::new();
     let mut any = false;
     for (ri, row) in t.rows.iter().enumerate() {
-        let mut g = 0usize;
+        let mut g = row.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
         for cell in &row.cells {
             let span = cell.span();
             if cell.props.vmerge != VMerge::Continue {

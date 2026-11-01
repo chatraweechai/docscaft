@@ -3439,12 +3439,28 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         // (Not in a row of exact height: it never breaks, and Word ignores the break there.)
         let exact = t.rows.get(ri).is_some_and(|r| r.props.height_rule == doc4me_doc::props::HeightRule::Exact && r.props.height.is_some());
         let mut pieces: Vec<std::borrow::Cow<'_, table::RowLayout>> = vec![std::borrow::Cow::Borrowed(row)];
+        let mut leading_break = false;
         while !exact && pieces.len() < 64 {
             let Some(last) = pieces.last() else { break };
             let Some((a, b)) = table::page_break_cut(last).and_then(|c| table::split_row(last, c)) else { break };
+            let first_piece = pieces.len() == 1 && !leading_break;
             pieces.pop();
-            pieces.push(std::borrow::Cow::Owned(a));
+            if first_piece && table::only_page_breaks(&a) {
+                leading_break = true;
+            } else {
+                pieces.push(std::borrow::Cow::Owned(a));
+            }
             pieces.push(std::borrow::Cow::Owned(b));
+        }
+        if leading_break && (!pb.at_top() || pb.col > 0) {
+            pb.new_page(block, body_top);
+            if !header_rows.contains(&ri) {
+                for hr in &header_rows {
+                    if let Some(h) = tl.rows.get(*hr) {
+                        place(pb, h);
+                    }
+                }
+            }
         }
         let n_pieces = pieces.len();
         for (pi, piece) in pieces.iter().enumerate() {

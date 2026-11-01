@@ -789,6 +789,9 @@ fn flow_table(doc: &Document, t: &Table, depth: usize) -> FTable {
     for (ri, r) in t.rows.iter().enumerate() {
         let header = r.props.header || (ri == 0 && t.props.look.header_row && t.rows.len() > 1);
         let mut cells = Vec::new();
+        let cell_cols = r.cells.iter().map(|c| c.span()).fold(0usize, usize::saturating_add).min(doc4me_doc::table::MAX_COLS);
+        let before = (r.props.grid_before as usize).min(doc4me_doc::table::MAX_COLS.saturating_sub(cell_cols));
+        cells.resize(before, Cell::default());
         for (ci, c) in r.cells.iter().enumerate() {
             let mut rowspan = 1;
             if c.props.vmerge == VMerge::Restart {
@@ -810,6 +813,8 @@ fn flow_table(doc: &Document, t: &Table, depth: usize) -> FTable {
                 shading: c.props.shading,
             });
         }
+        let after = (r.props.grid_after as usize).min(doc4me_doc::table::MAX_COLS.saturating_sub(cell_cols + before));
+        cells.resize(cells.len().saturating_add(after), Cell::default());
         rows.push(cells);
     }
     // Without a table style and without visible table or cell borders the table shows no grid.
@@ -1101,5 +1106,24 @@ mod tests {
         t.insert_covered();
         assert_eq!(t.rows[1].len(), 2);
         assert!(t.rows[1][0].covered);
+    }
+
+    #[test]
+    fn omitted_table_grid_columns_survive_flow_conversion() {
+        let mut doc = Document::new();
+        let mut table = Table::new(1, 3, 300.0);
+        table.rows[0].cells.truncate(1);
+        table.rows[0].props.grid_before = 1;
+        table.rows[0].props.grid_after = 1;
+        doc.body.push(std::sync::Arc::new(Block::Table(table)));
+
+        let flow = from_doc(&doc);
+        let table = flow
+            .blocks
+            .iter()
+            .find_map(|block| if let FBlock::Table(table) = block { Some(table) } else { None })
+            .expect("flow conversion should keep the table");
+        assert_eq!(table.cols(), 3);
+        assert_eq!(table.rows[0].len(), 3);
     }
 }
