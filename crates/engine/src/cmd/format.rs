@@ -96,7 +96,7 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("format.shadow", "Shadow", "Home › Font › Text Effects", |s, v| toggle(s, v, |r| r.shadow, |c, on| c.shadow = Some(on))),
         CommandSpec::new("format.emboss", "Emboss", "Home › Font › Font", |s, v| toggle(s, v, |r| r.emboss, |c, on| c.emboss = Some(on))),
         CommandSpec::new("format.engrave", "Engrave", "Home › Font › Font", |s, v| toggle(s, v, |r| r.engrave, |c, on| c.engrave = Some(on))),
-        CommandSpec::new("format.font", "Font", "Home › Font", font).key("Mod+Shift+F").params(r#"{"name"?: string, "eastAsia"?: string}"#),
+        CommandSpec::new("format.font", "Font", "Home › Font", font).params(r#"{"name"?: string, "eastAsia"?: string}"#),
         // Word's Ctrl+Shift+Q: the selection in the Symbol font.
         CommandSpec::new("format.symbolFont", "Symbol Font", "Home › Font", |s, _| font(s, &json!({"name": "Symbol"}))).key("Mod+Shift+Q"),
         CommandSpec::new("format.size", "Font Size", "Home › Font", size).key("Mod+Shift+P").params(r#"{"size": number}"#),
@@ -145,7 +145,7 @@ pub fn specs() -> Vec<CommandSpec> {
             s.ui_requests.push(json!({"open": "font"}));
             sel_result(s)
         })
-        .key("Mod+D")
+        .key("Mod+D / Mod+Shift+F")
         .pure(),
         CommandSpec::new("format.enclose", "Enclose Characters", "Home › Font", enclose)
             .params(r#"{"shape": "circle|square|triangle|diamond" | null, "style"?: "shrink|enlarge", "text"?: string}"#),

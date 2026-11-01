@@ -85,6 +85,7 @@ fn word_default_shortcuts_resolve() {
     assert_eq!(id("Mod+Alt+N"), Some("view.draft"));
     assert_eq!(id("Mod+Alt+S"), Some("view.split"));
     assert_eq!(id("Mod+Alt+-"), Some("text.emDash"));
+    assert_eq!(id("Mod+Shift+F"), Some("format.fontDialog"));
     assert_eq!(id("Mod+Shift+F5"), Some("insert.bookmark"));
     assert_eq!(id("Alt+F7"), Some("review.spelling"));
     assert_eq!(id("Shift+F12"), Some("file.save"));
