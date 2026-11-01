@@ -292,6 +292,11 @@ pub fn logic(app: &mut WordApp, ctx: &Context) {
                     consumed.push(*key);
                 }
             }
+            // Alt+Shift+F10: show the available actions at the document caret.
+            Key::F10 if m.alt && m.shift && !m.command && !m.ctrl && app.canvas.focused && app.dialog.is_none() => {
+                app.canvas.context_from_keys = true;
+                consumed.push(*key);
+            }
             Key::Escape if !m.any() && !canvas => {
                 // A list the keyboard opened from a command closes back onto the command;
                 // otherwise the focus leaves the ribbon (or a pane's or the status bar's stop) for
@@ -627,6 +632,17 @@ mod tests {
         assert!(h.state().canvas.context_menu_open);
         assert!(h.query_by_label_contains("Paragraph…").is_some(), "the page's shortcut menu");
         assert!(focused(&h).is_some() && !h.state().canvas.focused, "the menu has the keyboard");
+        press(&mut h, Key::Escape, NONE);
+        h.run_steps(2);
+        assert!(!h.state().canvas.context_menu_open);
+        assert!(h.state().canvas.focused);
+
+        h.state_mut().ui.keytips = crate::keytips::Phase::Tabs;
+        press(&mut h, Key::F10, Modifiers { shift: true, alt: true, ..NONE });
+        h.run_steps(1);
+        assert_eq!(h.state().ui.keytips, crate::keytips::Phase::Off, "available actions dismiss KeyTips");
+        assert!(h.state().canvas.context_menu_open, "Alt+Shift+F10 opens available actions");
+        assert!(h.query_by_label_contains("Paragraph…").is_some());
         press(&mut h, Key::Escape, NONE);
         h.run_steps(2);
         assert!(!h.state().canvas.context_menu_open);

@@ -804,6 +804,19 @@ pub fn logic(app: &mut WordApp, ctx: &egui::Context) {
     // leave them for the ribbon's own keyboard focus (`ribbon_keys`).
     let mut consumed = Vec::new();
     for e in &events {
+        if let egui::Event::Key { key: egui::Key::F10, pressed: true, modifiers, .. } = e
+            && app.ui.keytips != Phase::Off
+            && modifiers.alt
+            && modifiers.shift
+            && !modifiers.command
+            && !modifiers.ctrl
+            && app.canvas.focused
+            && app.dialog.is_none()
+        {
+            app.ui.keytips = Phase::Off;
+            app.ui.keytip_prefix.clear();
+            continue;
+        }
         if let egui::Event::Key { key, pressed: true, modifiers, .. } = e
             && app.ui.keytips != Phase::Off
             && crate::ribbon_keys::enters_ribbon(*key)

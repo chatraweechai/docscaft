@@ -1,8 +1,8 @@
 # Handoff: Doc4Me 1.1.1 · readiness 85.2% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
 
-อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 10 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
+อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 11 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
 
-## สถานะปัจจุบัน (2026-11-01 รอบที่ 10)
+## สถานะปัจจุบัน (2026-11-01 รอบที่ 11)
 
 ### Readiness ล่าสุด: 85.2% (วัดครบ 222 เอกสาร, 2026-11-01)
 
@@ -11,7 +11,7 @@
 | ฟีเจอร์ | 0.30 | 90.0% | ribbon 499/499; dialogs 183/229 (12 deferred) |
 | รูปแบบไฟล์ | 0.20 | 100.0% | เปิด 222/222; round-trip 222/222 |
 | การจัดหน้า | 0.15 | 55.4% | จำนวนหน้าตรง 160/222; คำต้น/ท้ายตรง 86/222 |
-| UI/UX | 0.10 | 95.4% | shortcuts 267/280 (7 deferred) |
+| UI/UX | 0.10 | 95.7% | shortcuts 268/280 (7 deferred) |
 | ความเสถียร | 0.10 | 100.0% | corpus 222/222; hand checks 5/5 |
 | ประสิทธิภาพ | 0.05 | 100.0% | 6/6 |
 | ภาษา | 0.04 | 31.6% | 30/95 |
@@ -22,6 +22,8 @@
 คะแนนเมื่อไม่นับ 26 แถว deferred = 87.6%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
 
 รอบนี้แก้การจัดประเภทภาพใน `crates/docx/src/read/story.rs`: เมื่อ `wps:wsp` มี `w:txbxContent` ภาพที่อยู่ข้างในเป็นเนื้อหาของ story ไม่ใช่รูปภาพแทนกล่องข้อความ; เพิ่ม regression test ที่มีภาพ PNG จริงและตรวจ round-trip. corpus ผ่าน 222/222 (รวม zenodo-153); คะแนน readiness รวมและคะแนนเมื่อตัด deferred ยังเท่าเดิมหลังปัดเศษ. ตรวจ `cargo fmt --all`, `cargo test -p doc4me-docx`, `cargo clippy -p doc4me-docx --all-targets -- -D warnings`, release build และ readiness corpus ครบ. เป้าหมาย 100% ยังไม่สำเร็จ; งานหลักที่เหลือคือ pagination, dialogs และภาษา.
+
+รอบนี้เพิ่ม `Alt+Shift+F10` ให้ปิด KeyTips (ถ้าเปิดอยู่) และเปิดเมนูคำสั่งของเอกสารตรง caret; Escape ปิดกลับได้; UI regression test ผ่าน, `ks-319` เปลี่ยนเป็นผ่านตามหลักฐาน; shortcuts 268/280 และ readiness รวมยัง 85.2% (87.6% เมื่อตัด deferred). ตรวจ `cargo fmt --all -- --check`, UI suite แบบข้าม network integration test (394 ผ่าน), `cargo clippy -p doc4me-ui-egui --all-targets -- -D warnings` และวัด corpus readiness ครบ. UI suite เต็มมี Zotero integration test ล้มเหลวเพราะ remote host ปิดการเชื่อมต่อ; งาน 100% ยังไม่สำเร็จ.
 
 รอบนี้แก้ `Alt+Shift+Plus` ให้สลับขยาย/ยุบหัวข้อใน Outline ตามสถานะ และเลิกดัก `Alt+Shift+Minus` เพื่อให้แทรก nonbreaking hyphen ได้ตามปกติ; regression test ตรวจ mapping และทั้งสองสถานะ; ปรับรายการ `ks-257`/`ks-258`. ตรวจ `cargo fmt --all -- --check` ผ่าน, `cargo test -p doc4me-engine --lib outline_show_level_filters_paragraphs` (1 ผ่าน), `cargo test -p doc4me-ui-egui` (395 ผ่าน) และ readiness corpus ครบ (85.2%). `cargo xtask ci` ยังไม่ผ่าน: Clippy พบ unused import ใน `apps/doc4me/src/screen_clip.rs` และ lint `chunks_exact_to_as_chunks` ใน `apps/doc4me/src/dictate.rs` ซึ่งไม่ได้อยู่ใน diff นี้; `cargo test --workspace` มี test failures ใน control server/XDG app dirs และ font-dependent tests บนเครื่องนี้. งานใหม่อยู่ใต้ `[Unreleased]`; ยังไม่ออกเวอร์ชัน.
 

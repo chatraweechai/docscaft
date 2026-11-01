@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness corpus round-trip now passes 222/222 after retaining text boxes with nested images; 85.2% weighted score unchanged; remaining work updated) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness remains 85.2%; DOCX round-trip passes 222/222 and shortcut coverage is 268/280 after adding Alt+Shift+F10; remaining work updated) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -134,7 +134,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); DOCX round-trip 222/222 after preserving text boxes with nested images; added Word's Alt+Shift+Plus outline toggle, shortcut coverage 267/280; remaining score is blocked by pagination, dialogs and localization |
+| 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); DOCX round-trip 222/222; shortcuts 268/280 after Alt+Shift+F10 available-actions menu; remaining score is blocked by pagination, dialogs and localization |
 | 2026-10-27 | trivial | Target raised from 95% to 100% measured (owner); what 100% needs |
 | 2026-10-25 | trivial | Target raised from 80% to 95% measured (owner); the rows only the owner can check |
 | 2026-10-25 | trivial | Stage C so far: measured 73.4% |

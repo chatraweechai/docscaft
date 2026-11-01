@@ -317,7 +317,7 @@ ks-315	Use function key shortcuts	Turn KeyTips on or off.	F10	F10		duplicate	ks-
 ks-316	Use function key shortcuts	Display the shortcut menu.	Shift+F10	Shift+F10		duplicate	ks-049	same shortcut and action as ks-049
 ks-317	Use function key shortcuts	Maximize or restore the document window.	Ctrl+F10	Mod+F10	view.maximizeWindow	registry		maximizes the window or puts it back
 ks-318	Use function key shortcuts	Display the Selection pane.	Alt+F10	Alt+F10	arrange.selectionPane	registry		arrange.selectionPane
-ks-319	Use function key shortcuts	Display the menu for available actions.	Alt+Shift+F10	Alt+Shift+F10	-	manual	fail	
+ks-319	Use function key shortcuts	Display the menu for available actions.	Alt+Shift+F10	Alt+Shift+F10	-	manual	pass	`crates/ui-egui/src/ribbon_keys.rs` test `shift_f10_menus_and_ctrl_shift_f10_tooltips`: opens the document context menu at the caret and closes it with Escape
 ks-320	Use function key shortcuts	Move to the next field.	F11	F11		duplicate	ks-225	same shortcut and action as ks-225
 ks-321	Use function key shortcuts	Move to the previous field.	Shift+F11	Shift+F11		duplicate	ks-226	same shortcut and action as ks-226
 ks-322	Use function key shortcuts	Lock the current field.	Ctrl+F11	Mod+F11		duplicate	ks-227	same shortcut and action as ks-227

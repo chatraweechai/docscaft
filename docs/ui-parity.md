@@ -1,6 +1,6 @@
 # UI parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (the default Outline expand/collapse shortcut now follows Word's Alt+Shift+Plus toggle; Alt+Shift+Minus inserts a nonbreaking hyphen; readiness shortcuts 267/280) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (Alt+Shift+F10 opens the document actions menu; Outline toggle follows Word; readiness shortcuts 268/280) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 How Doc4Me looks and feels next to Word: ribbon, dialogs, panes, keyboard, mouse and touch.
 Typing behaviour has its own checklist ([`typing-parity.md`](typing-parity.md)). All assets are our
@@ -44,6 +44,7 @@ own (`AGENTS.md`: no Microsoft iconography, ever).
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Alt+Shift+F10 dismisses active KeyTips and opens the actions/context menu at the document caret; regression test covers opening and Escape dismissal; shortcut check ks-319 passes |
 | 2026-10-12 | trivial | Navigation headings truncate with an ellipsis within the pane width, preserving resizing and full-text hover (#759) |
 | 2026-10-11 | minor | Reading Mode: viewport-height horizontal columns, animated paging, transient display controls, heading navigation and responsive anchored resizing |
 | 2026-10-11 | trivial | Alt activation handles native key/modifier events in either order, including key-up with the old Alt flag; taps toggle once, chords and focus loss do not activate KeyTips |

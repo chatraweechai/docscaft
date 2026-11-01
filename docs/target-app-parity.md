@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (full readiness remains 85.2%; corpus DOCX round-trip now preserves measured structure in 222/222 documents) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (full readiness remains 85.2%; DOCX round-trip 222/222 and shortcut coverage 268/280) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -263,7 +263,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-01 | minor | Full readiness 85.2% on the complete corpus (87.6% without 26 deferred checks); DOCX round-trip 222/222 after nested-image text-box fix; layout 55.4%, dialogs 183/229, shortcuts 267/280, localization 30/95 |
+| 2026-11-01 | minor | Full readiness 85.2% on the complete corpus (87.6% without 26 deferred checks); DOCX round-trip 222/222; layout 55.4%, dialogs 183/229, shortcuts 268/280, localization 30/95 |
 | 2026-10-25 | trivial | Ready for real work measured again: 73.4% after stage C work (shortcuts, dialogs, languages, platforms, layout) |
 | 2026-10-25 | minor | Ready for real work measured: 66.1% (`cargo xtask readiness`, 222 real-world documents) replaces the ~60% estimate; file-format, layout and file-exchange evidence from the corpus |
 | 2026-10-25 | trivial | Layout and file-exchange rows: Aptos drawn with the metric-compatible Intos; Aptos substitute removed from the human-time list |
