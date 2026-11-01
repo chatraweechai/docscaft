@@ -28,7 +28,7 @@ use std::sync::Arc;
 
 use doc4me_doc::numbering::{Counters, Level};
 use doc4me_doc::para::{Anchor, Float, FloatAlign, InlineObject, Wrap, WrapText};
-use doc4me_doc::props::{Border, CharProps, FrameProps, Rgb, TableFloat, TextDirection};
+use doc4me_doc::props::{Border, CharProps, FrameProps, FrameWrap, Rgb, TableFloat, TextDirection};
 use doc4me_doc::section::{HeaderSet, SectionProps, SectionStart};
 use doc4me_doc::{Block, Blocks, Document, Paragraph, Path, StoryRef};
 use doc4me_geom::{Point, Rect, Spin};
@@ -928,7 +928,7 @@ fn layout_blocks(
         path.push(i as u32);
         match &**b {
             Block::Para(p) => {
-                if frames && let Some(f) = ctx.resolved(p).frame {
+                if frames && let Some(f) = ctx.resolved(p).frame.filter(|f| !is_flow_frame(f)) {
                     let last = frame_group_end(ctx, blocks, i, &f);
                     let fb = frame_box(ctx, story, blocks, prefix, (i, last), &f, width, depth);
                     let r = frame_rect(frame, (0.0, width), y, (fb.w, fb.h), &f);
@@ -1090,6 +1090,12 @@ fn frame_group_end(ctx: &mut Ctx, blocks: &Blocks, i: usize, f: &FrameProps) -> 
         last += 1;
     }
     last
+}
+
+/// Word emits this zero-size frame marker on ordinary paragraphs in some documents; laying a
+/// long run as one floating frame clips everything after its anchor page instead of paginating.
+fn is_flow_frame(f: &FrameProps) -> bool {
+    *f == FrameProps { h_rel: Anchor::Column, v_rel: Anchor::Margin, wrap: FrameWrap::Auto, ..FrameProps::default() }
 }
 
 /// A text frame's paragraphs laid out from (0, 0), and the frame's width and height.
@@ -2847,7 +2853,7 @@ fn para_notes(doc: &Document, p: &Paragraph, pl: &ParaLayout) -> Vec<(usize, u32
 fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, body_top: f32) {
     // A text frame: placed with its first paragraph (in a web page, in the text).
     if !pb.web
-        && let Some(f) = ctx.resolved(p).frame
+        && let Some(f) = ctx.resolved(p).frame.filter(|f| !is_flow_frame(f))
     {
         match pb.frame_group {
             Some((first, last, inline)) if first < block && block <= last => {

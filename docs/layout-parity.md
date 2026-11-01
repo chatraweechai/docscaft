@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (recorded corpus pagination checks: 160/222 page counts and 86/222 page-break checks pass; the remaining layout gap is measured rather than untested) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (zero-size Word frame markers now stay in page flow; zenodo-030 improves from 16 to 34 pages but still differs from Word's 32; aggregate pagination checks remain unchanged) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -10,8 +10,10 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
 most of Word's layout rules; the 2026-11-01 real-world corpus measurement matches Word's page count
-for 160/222 documents and every page's first and last word for 86/222. The remaining layout gap is
-substantial, and direct visual comparison on the remaining cases is still needed.
+for 160/222 documents and every page's first and last word for 86/222. The zero-size Word frame
+marker fix prevents later paragraphs in zenodo-030 from being clipped; that document now lays out
+to 34 pages versus Word's 32, so it remains a measured mismatch. Direct visual comparison on the
+remaining cases is still needed.
 
 ## Checklist
 
@@ -79,6 +81,7 @@ substantial, and direct visual comparison on the remaining cases is still needed
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-01 | minor | Treat Word's zero-size `w:framePr` marker as page flow, not a floating frame; regression test covers pagination; zenodo-030 improves from 16 to 34 pages (Word: 32), with aggregate checks unchanged at 160/222 and 86/222 |
 | 2026-11-01 | minor | Recorded complete-corpus pagination measurement: 160/222 page counts and 86/222 page-break checks pass; remaining fidelity work is measured, not an unstarted harness |
 | 2026-10-25 | trivial | Default font metrics row: Aptos and Aptos Display drawn with the bundled Intos and Intos Display (measured: same advances, 387/387 line breaks) |
 | 2026-10-25 | trivial | TH SarabunIT๙ row removed from the metric-matched fonts: drawn with Sarabun at its own size, announced on open |

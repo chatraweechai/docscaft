@@ -63,8 +63,9 @@ uses the number is in [`../roadmap.md`](../roadmap.md#path-to-100-measured-readi
 How a mapping was decided is in each row's `note`. Hand checks name their evidence; when the
 published shortcut list contradicts Word's long-standing key (subscript, the hyphens, Collapse),
 the row follows the published list and says so in its note, to be confirmed on Word for Windows.
-Excluded: Word for Mac's page-setup dialogs (the target is Word for Windows), Information Rights
-Management and the Outlook address book (Microsoft services) and the VBA editor (out of scope).
+Excluded: Word for Mac's page-setup dialogs and `wdDialogFilePrintOneCopy` (the target is Word for
+Windows), Information Rights Management and the Outlook address book (Microsoft services) and the
+VBA editor (out of scope).
 
 ## The corpus
 

@@ -1,6 +1,6 @@
 use super::*;
 use doc4me_doc::para::InlineObject;
-use doc4me_doc::props::{Align, Border, BorderStyle, Borders, ParaProps, TextDirection};
+use doc4me_doc::props::{Align, Border, BorderStyle, Borders, FrameProps, FrameWrap, ParaProps, TextDirection};
 use doc4me_doc::{Pos, Table};
 
 fn lay(doc: &Document) -> DocLayout {
@@ -42,6 +42,23 @@ fn long_paragraph_wraps_and_paginates() {
             }
         }
     }
+}
+
+#[test]
+fn zero_size_word_frame_markers_keep_paragraphs_in_page_flow() {
+    use doc4me_doc::para::Anchor;
+
+    let mut d = Document::new();
+    let marker = FrameProps { h_rel: Anchor::Column, v_rel: Anchor::Margin, wrap: FrameWrap::Auto, ..FrameProps::default() };
+    for i in 0..150 {
+        let mut p = doc4me_doc::Paragraph::with_text(&format!("Paragraph {i} stays in the document flow."), Default::default());
+        p.props.frame = Some(marker);
+        d.insert_block(StoryRef::Body, &Path::top(i), Block::Para(p)).unwrap();
+    }
+
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "frame-marked paragraphs should paginate, got {} page(s)", l.pages.len());
+    assert_eq!(lines_of(&l), 151);
 }
 
 #[test]
