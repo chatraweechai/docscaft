@@ -1,6 +1,6 @@
 # Doc4Me
 
-**English** · [ภาษาไทย](README.th.md)
+**English** · [ภาษาไทย](README.md)
 
 Doc4Me is a clean-room, open-source word processor written in Rust. It aims for complete parity
 with Microsoft Word, then goes further on speed, openness and agent control: every feature is a
