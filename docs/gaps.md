@@ -1,6 +1,6 @@
 # Where Doc4Me falls short of Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (full readiness remeasured at 85.2%; pagination gap now cites the complete corpus measurement and available comparison harness) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (DOCX corpus round-trip now preserves measured structure in 222/222; pagination gap cites the complete measurement and comparison harness) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The work list. One entry per shortfall, ranked by how much it stops a Word user from switching
 (**B** = blocks beta). Each says what's missing, the evidence, who it hurts, an Opus 5.5 agent
@@ -13,7 +13,7 @@ Native save reliability: synthetic cases on macOS reproduced loss through the pr
 
 | # | Gap | B | Evidence | Impact | Hours | Doc |
 |---|---|---|---|---|---|---|
-| 1 | **Real-world DOCX fidelity remains incomplete.** The 222-document Word-reference corpus is now opened, round-tripped and compared for page count/page boundaries; formatting still is not compared directly with Word, and 1 document changes a text box into an image on save | B | 222/222 open and remain stable, 221/222 preserve measured structure, 160/222 match Word's page count and 86/222 match every page's first/last word in the 2026-11-01 run ([readiness.md](readiness.md)); see the specific outlier and corpus limits in [file-format-parity.md](file-format-parity.md) | Everyone exchanging complex documents; pagination-sensitive forms and reports | 30–50 | [file-format-parity.md](file-format-parity.md) |
+| 1 | **Real-world DOCX fidelity remains incomplete.** The 222-document Word-reference corpus is opened, round-tripped and compared for page count/page boundaries; all documents preserve measured structure, but formatting still is not compared directly with Word | B | 222/222 open, remain stable and preserve measured structure; 160/222 match Word's page count and 86/222 match every page's first/last word in the 2026-11-01 run ([readiness.md](readiness.md)); corpus limits are in [file-format-parity.md](file-format-parity.md) | Everyone exchanging complex documents; pagination-sensitive forms and reports | 30–50 | [file-format-parity.md](file-format-parity.md) |
 | 2 | **Word ink is dropped on open and lost on save, silently**; OLE objects show only their picture | B | No Word ink (`w14:contentPart`) handling in `crates/docx`; drawing canvases (`wpc`) and group shapes (`wpg`) are read and written (#267, #344). Charts and SmartArt are drawn (#292) and, with OLE objects, written back with all their parts on save (#319) | Documents with pen notes lose content without warning | 2–4 to preserve ink; 45–70 to render and edit charts and SmartArt (#13) | [file-format-parity.md](file-format-parity.md) |
 | 3 | **Crashes and freezes in the field**: startup crash on Intel UHD Graphics (#170) (lag on GPUs without a DirectX 12 driver fixed, #316), freezes (#77, #59 Thai fonts, #31 font selector), no writes without admin on Windows 11 (#218), broken shape tool (#142), images can't be moved (#82) | B | 62 open issues, ~15 of them crashes, hangs or data-path failures | Anyone hit loses work or trust; the never-crash standard covers panics, not hangs or GPU driver faults | 20–30 | [target-app-parity.md](target-app-parity.md) (Stability) |
 | 4 | **Pagination differs from Word**: the page-by-page comparison harness is in `cargo xtask readiness`; legacy compatibility and font fallback gaps remain (Aptos and Aptos Display are drawn with the bundled metric-compatible Intos and Intos Display since 2026-10-25: same advances, kerning and line spacing) | B | 160/222 corpus page counts and 86/222 page-break checks pass in the 2026-11-01 measurement ([readiness.md](readiness.md)); [layout-parity.md](layout-parity.md); [typing-parity.md](typing-parity.md) Known gaps | Page counts and line breaks differ, which matters for forms, legal and academic work | 30–50 | [layout-parity.md](layout-parity.md) |
@@ -69,7 +69,7 @@ The same gaps grouped the way the parity documents are, for agents working in on
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-01 | minor | Readiness 85.2% on the complete corpus; pagination harness confirmed, 160/222 page counts and 86/222 page-break checks pass |
+| 2026-11-01 | minor | Readiness 85.2% on the complete corpus; DOCX round-trip 222/222; pagination harness confirmed, 160/222 page counts and 86/222 page-break checks pass |
 | 2026-10-25 | trivial | Beta note: measured readiness is 73.4% now |
 | 2026-10-25 | trivial | Beta note: the full number is measured (66.1%) instead of estimated (~60% → ~75%) |
 | 2026-10-25 | trivial | #4: Aptos and Aptos Display drawn with the bundled Intos and Intos Display; owner-bound font item removed |

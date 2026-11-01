@@ -927,18 +927,21 @@ impl Reader<'_> {
             float.effect = float.effect.map(|e| e.max(0.0));
             return Some(InlineObject::Graphic { w, h, alt, float, graphic });
         }
+        let wsp = gd.find("wps:wsp");
+        let has_text_box = wsp.is_some_and(|shape| shape.child("wps:txbx").and_then(|txbx| txbx.child("w:txbxContent")).is_some());
         let mut obj = if let Some(c) = gd.child("wpc:wpc") {
             self.read_canvas(sc, c, rels, w, h, float)
         } else if let Some(g) = gd.child("wpg:wgp") {
             self.read_group(sc, g, rels, w, h, float)?
+        } else if has_text_box {
+            self.read_wsp(sc, wsp?, rels, w, h, float)
         } else if gd.find("a:blip").is_some() {
             self.read_pic(gd, rels, w, h, alt.clone(), float)?
         } else {
-            let wsp = gd.find("wps:wsp")?;
-            let mut obj = self.read_wsp(sc, wsp, rels, w, h, float);
+            let mut obj = self.read_wsp(sc, wsp?, rels, w, h, float);
             // A freeform: its custom geometry, and whether it's ink Doc4Me wrote.
             if let InlineObject::Shape { kind, freeform, .. } = &mut obj
-                && let Some(sppr) = wsp.child("wps:spPr")
+                && let Some(sppr) = wsp.and_then(|shape| shape.child("wps:spPr"))
                 && let Some(mut f) = super::freeform::cust_geom(sppr, w, h)
             {
                 f.alpha = super::freeform::line_alpha(sppr.child("a:ln"));
@@ -1236,20 +1239,14 @@ impl Reader<'_> {
         let len = |k: &str| vml_style(style, k).and_then(|v| measure(v, 1.0)).unwrap_or(0.0).clamp(0.0, crate::units::MAX_LEN_PT);
         let (mut w, mut h) = (len("width"), len("height"));
         let mut float = vml_float(shape, style);
-        if let Some(img) = shape.find("v:imagedata") {
-            let id = img.attr("r:id").or_else(|| img.attr("r:pict"))?;
-            let media = self.media_for(rels, id)?;
-            let alt = shape.attr("alt").or_else(|| img.attr("o:title")).unwrap_or("").to_string();
-            return Some(InlineObject::Image { media, w, h, alt, float, crop: [0.0; 4], ole: None, video: None });
-        }
-        let on = |name: &str| shape.attr(name).is_none_or(|v| !matches!(v, "f" | "false" | "0"));
-        let stroke = on("stroked").then(|| shape.attr("strokecolor").map_or(Some(Rgb::BLACK), vml_color)).flatten();
-        let stroke_width = shape.attr("strokeweight").and_then(|v| measure(v, 1.0)).unwrap_or(0.75).clamp(0.0, 100.0);
-        let fill = on("filled").then(|| shape.attr("fillcolor").map_or(Some(Rgb::WHITE), vml_color)).flatten();
         if let Some(t) = shape.find("w:txbxContent")
             && sc.story_depth < MAX_STORY_DEPTH
         {
             let story = Some(self.read_textbox(sc, t, rels));
+            let on = |name: &str| shape.attr(name).is_none_or(|v| !matches!(v, "f" | "false" | "0"));
+            let stroke = on("stroked").then(|| shape.attr("strokecolor").map_or(Some(Rgb::BLACK), vml_color)).flatten();
+            let stroke_width = shape.attr("strokeweight").and_then(|v| measure(v, 1.0)).unwrap_or(0.75).clamp(0.0, 100.0);
+            let fill = on("filled").then(|| shape.attr("fillcolor").map_or(Some(Rgb::WHITE), vml_color)).flatten();
             return Some(InlineObject::Shape {
                 kind: ShapeKind::TextBox,
                 w,
@@ -1264,6 +1261,16 @@ impl Reader<'_> {
                 extra: Default::default(),
             });
         }
+        if let Some(img) = shape.find("v:imagedata") {
+            let id = img.attr("r:id").or_else(|| img.attr("r:pict"))?;
+            let media = self.media_for(rels, id)?;
+            let alt = shape.attr("alt").or_else(|| img.attr("o:title")).unwrap_or("").to_string();
+            return Some(InlineObject::Image { media, w, h, alt, float, crop: [0.0; 4], ole: None, video: None });
+        }
+        let on = |name: &str| shape.attr(name).is_none_or(|v| !matches!(v, "f" | "false" | "0"));
+        let stroke = on("stroked").then(|| shape.attr("strokecolor").map_or(Some(Rgb::BLACK), vml_color)).flatten();
+        let stroke_width = shape.attr("strokeweight").and_then(|v| measure(v, 1.0)).unwrap_or(0.75).clamp(0.0, 100.0);
+        let fill = on("filled").then(|| shape.attr("fillcolor").map_or(Some(Rgb::WHITE), vml_color)).flatten();
         let kind = match shape.local() {
             "line" => ShapeKind::Line,
             "rect" => ShapeKind::Rectangle,

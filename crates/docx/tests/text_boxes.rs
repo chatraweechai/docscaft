@@ -50,6 +50,13 @@ fn text_box(d: &mut Document, text: &str, body: TextBody) -> InlineObject {
     }
 }
 
+fn tiny_png() -> Vec<u8> {
+    let img = image::RgbaImage::from_pixel(1, 1, image::Rgba([1, 2, 3, 255]));
+    let mut out = std::io::Cursor::new(Vec::new());
+    img.write_to(&mut out, image::ImageFormat::Png).unwrap();
+    out.into_inner()
+}
+
 #[test]
 fn direction_alignment_and_links_round_trip() {
     let mut d = Document::from_text("a\nb\nc");
@@ -107,4 +114,38 @@ fn hostile_links_read_without_chains_running_wild() {
     assert_eq!(r.text_box_chains(), vec![vec![got[0], got[1]]], "one chain: the first box and the first seq 1");
     let b = r.parts.get(&got[0]).unwrap().body;
     assert_eq!((b.vert, b.anchor), (TextVert::Vert, VAlign::Center));
+}
+
+#[test]
+fn image_inside_text_box_keeps_its_text_box_story() {
+    let png = tiny_png();
+    let rels = r#"<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rIdImage" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/preview.png"/></Relationships>"#;
+    let body = wsp(
+        r#"<wps:txbx><w:txbxContent><w:p><w:r><w:t>Credit </w:t></w:r><w:r><w:drawing><wp:inline><wp:extent cx="9525" cy="9525"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:blipFill><a:blip r:embed="rIdImage"/></pic:blipFill></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p></w:txbxContent></wps:txbx>"#,
+    );
+    let root = r#"<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>"#;
+    let doc = format!(
+        r#"<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape"><w:body>{body}</w:body></w:document>"#
+    );
+    let types =
+        r#"<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="png" ContentType="image/png"/></Types>"#;
+    let package = zip(&[
+        ("[Content_Types].xml", types.as_bytes()),
+        ("_rels/.rels", root.as_bytes()),
+        ("word/document.xml", doc.as_bytes()),
+        ("word/_rels/document.xml.rels", rels.as_bytes()),
+        ("word/media/preview.png", &png),
+    ]);
+    let read = |bytes: &[u8]| {
+        let d = doc4me_docx::read(bytes).unwrap();
+        let ids = boxes(&d);
+        assert_eq!(ids.len(), 1);
+        assert_eq!(d.plain_text(doc4me_doc::StoryRef::Part(ids[0])), "Credit ");
+        let story = d.parts.get(&ids[0]).unwrap();
+        assert!(story.blocks.iter().filter_map(|b| b.as_para()).any(|p| p.objects.iter().any(|o| matches!(o, InlineObject::Image { .. }))));
+        d
+    };
+    let original = read(&package);
+    let saved = doc4me_docx::write(&original).unwrap();
+    read(&saved);
 }

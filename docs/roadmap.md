@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (measured readiness 85.2% on 222 corpus documents; current score and remaining work updated; prior revisions remain in the revision history) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (readiness corpus round-trip now passes 222/222 after retaining text boxes with nested images; 85.2% weighted score unchanged; remaining work updated) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -12,8 +12,8 @@ Opus 5.5 agent wall-clock.
    (Clipboard pane #264, Manage Styles #270, Group #267), fix field bugs (Hebrew RTL #20, IME
    fixes #155–#164) or add languages (nb, nn, he). Owner review needed.
 2. **DOCX real-world fidelity** (gap #1, 30–50 h): the 222-document corpus is measured for open,
-   round-trip, stability and pagination; fix remaining fidelity failures, including the text-box
-   structure change, and compare formatting directly with Word. Omitted/empty paragraph defaults
+   round-trip, stability and pagination; all documents preserve measured structure after save and
+   reopen, but formatting still needs direct comparison with Word. Omitted/empty paragraph defaults
    also have synthetic save/reopen coverage.
 3. **Preserve what we can't render** (gap #2, 10–15 h): charts, SmartArt, OLE, ink, group shapes
    survive a round trip and show their fallback pictures.
@@ -36,7 +36,7 @@ desktop in WordCraft and have not been re-run on Windows yet.
 | Core workflow | Works end to end? | Evidence | Hours to pass |
 |---|---|---|---|
 | Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 625 commands (2026-10-25), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
-| Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; typical text/table/picture documents work; on 222 real-world documents all open and 221 keep text and make-up through save and reopen (formatting not compared yet); charts, SmartArt and OLE dropped silently, move tracking lost (gaps #1, #2, #5) | 0 (beta work: 50–80) |
+| Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; typical text/table/picture documents work; on 222 real-world documents all open and preserve measured structure through save and reopen (formatting not compared yet); charts, SmartArt and OLE dropped silently, move tracking lost (gaps #1, #2, #5) | 0 (beta work: 50–80) |
 | Build a structured document: tables, pictures, headers/footers, page numbers, sections, columns | yes | Tables with row splitting and floating tables (#137), floating pictures (#136), first/odd/even headers; columns don't balance (gap #4) | 0 |
 | Review with others: comments, track changes, accept/reject, compare | yes | Margin balloons, tracked insert/delete incl. paragraph marks (#125, #244), formatting revisions (#41), compare | 0 |
 | References for reports and papers: TOC, footnotes, citations and bibliography, captions | yes | Updatable TOC field (#52), notes, APA/MLA/Chicago/IEEE, Zotero (#189); long footnotes don't continue (gap #4) | 0 |
@@ -50,7 +50,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | # | Milestone | State | Remaining |
 |---|---|---|---|
 | M0 | Skeleton and vertical slice (model, layout, render, engine, Word-style UI, CLI, MCP, web) | done | — |
-| M1 | DOCX I/O | corpus measured: 222/222 open, 221/222 preserve measured structure; formatting comparison and one text-box-to-image round-trip change remain | 30–50 h |
+| M1 | DOCX I/O | corpus measured: 222/222 open and preserve measured structure; direct formatting comparison remains | 30–50 h |
 | M2 | Home tab | done (Paste Special, Clipboard pane, Style Inspector, Manage Styles and Asian Typography landed; Dictate with whisper.cpp on the computer, 2026-10-25) | — |
 | M3 | Insert tab | done: equations (#191), icons (#309), charts, SmartArt, Screenshot › Screen Clipping, Online Video, 3D Models (as a picture), Online Pictures (Openverse), Get Add-ins (Doc4Me's own catalog) and Ink Equation landed | — |
 | M4 | Layout and Design tabs | done except column balancing, group | 6–10 h |
@@ -71,7 +71,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **85.2%** on 2026-11-01 (`readiness.md`, all 222 corpus documents), 14.8
+2026-10-25 report, and **85.2%** on 2026-11-01 (`readiness.md`, all 222 corpus documents; DOCX open and round-trip 222/222), 14.8
 points short of the target. The current score excluding 26 deferred owner-bound checks is 87.6%.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
@@ -134,7 +134,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); added Word's Alt+Shift+Plus outline toggle, shortcut coverage 267/280; remaining score is blocked by pagination, dialogs, localization and owner-deferred checks |
+| 2026-11-01 | minor | Full readiness 85.2% on 222 documents (87.6% without 26 deferred checks); DOCX round-trip 222/222 after preserving text boxes with nested images; added Word's Alt+Shift+Plus outline toggle, shortcut coverage 267/280; remaining score is blocked by pagination, dialogs and localization |
 | 2026-10-27 | trivial | Target raised from 95% to 100% measured (owner); what 100% needs |
 | 2026-10-25 | trivial | Target raised from 80% to 95% measured (owner); the rows only the owner can check |
 | 2026-10-25 | trivial | Stage C so far: measured 73.4% |

@@ -769,6 +769,24 @@ fn bare_break_directly_in_paragraph() {
     assert_eq!(paras(&d2)[0].text, "First\nSecond\n\u{C}Third");
 }
 
+#[test]
+fn vml_text_box_with_preview_keeps_editable_text() {
+    let body = r#"<w:p><w:r><w:pict><v:shape style="width:72pt;height:20pt"><v:imagedata r:id="rIdPreview"/><v:textbox><w:txbxContent><w:p><w:r><w:t>Editable credit</w:t></w:r></w:p></w:txbxContent></v:textbox></v:shape></w:pict></w:r></w:p>"#;
+    let bytes = docx(body, &[("rIdPreview", "image", "media/preview.png")], &[]);
+    let read_text = |bytes: &[u8]| {
+        let d = doc4me_docx::read(bytes).unwrap();
+        let Some(InlineObject::Shape { kind: ShapeKind::TextBox, story: Some(story), .. }) = paras(&d).first().and_then(|p| p.objects.first()) else {
+            panic!("VML text box with a preview must remain a text box");
+        };
+        let text = d.parts.get(story).and_then(|p| p.blocks.first()).and_then(|b| b.as_para()).map(Paragraph::plain_text);
+        assert_eq!(text.as_deref(), Some("Editable credit"));
+        d
+    };
+    let d = read_text(&bytes);
+    let saved = doc4me_docx::write(&d).unwrap();
+    read_text(&saved);
+}
+
 /// Issue #149: an absolutely positioned VML text box in a header floats where its style puts it
 /// (relative to the page here, behind the text at a negative z-index, no wrapping) instead of
 /// sitting inline in the header's flow, and it keeps that placement when saved and read back.

@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (full readiness remeasured at 85.2% on 222 corpus documents; headline and remaining readiness gaps updated) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (full readiness remains 85.2%; corpus DOCX round-trip now preserves measured structure in 222/222 documents) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -116,7 +116,7 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 | Interaction fidelity | ×0.93 | — | Typing pinned to Word (`tests_typing.rs`), ribbon, keytips, mini-toolbar; but 16 modal dialogs against Word's ~100, 125 of ~250 shortcuts, picture/shape handling complaints (#82, #142) |
 | Discoverability and UI clarity | — | ×0.95 | Word-style ribbon a Word user already knows, command search, keytips; some newer pane strings and tooltips terse or untranslated |
 | Stability on real machines | ×0.90 | ×0.90 (launch and install) | Never-crash standard, hostile-param fuzzing, panic guard; but open startup crash on Intel UHD (#170), freezes (#77, #59, #31), Windows writes fail without admin (#218), installer conflicts with other Crafting Apps (#64, #73, #106, #51); 5 days of field history |
-| Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 222 real-world documents open and stay stable, and 221 keep their measured structure through save and reopen; one text box is emitted as an image. Pagination matches Word's page count on 160 of the 222 and every page's first/last word on 86; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
+| Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 222 real-world documents open, stay stable and preserve their measured structure through save and reopen. Pagination matches Word's page count on 160 of the 222 and every page's first/last word on 86; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
 | Product | **×0.753** | **×0.787** | |
 
 ### Full target (ready for real work): 85.2% measured
@@ -202,7 +202,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | Dimension | Weight | Parity | Hours to full | Doc | Evidence |
 |---|---|---|---|---|---|
 | Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
-| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | DOCX opens in Word and round-trips our own tests; of 222 real-world documents all open and 221 keep their text and make-up through save and reopen (measured 2026-10-25), formatting not compared yet; charts, SmartArt, OLE and encrypted files are lost or refused (content controls kept since #381) |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | DOCX opens in Word and round-trips our own tests; all 222 real-world documents open and preserve measured structure through save and reopen (2026-11-01); formatting not compared yet; charts, SmartArt, OLE and encrypted files are lost or refused (content controls kept since #381) |
 | Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); no column balancing, footnote continuation or document grid; compatibility modes beyond 15 partial |
 | UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, 125 shortcuts; 16 modal dialogs against Word's ~100; no ribbon/keyboard customization |
 | Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
@@ -263,7 +263,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-01 | minor | Full readiness 85.2% on the complete corpus (87.6% without 26 deferred checks); layout 55.4%, dialogs 183/229, shortcuts 267/280, localization 30/95 |
+| 2026-11-01 | minor | Full readiness 85.2% on the complete corpus (87.6% without 26 deferred checks); DOCX round-trip 222/222 after nested-image text-box fix; layout 55.4%, dialogs 183/229, shortcuts 267/280, localization 30/95 |
 | 2026-10-25 | trivial | Ready for real work measured again: 73.4% after stage C work (shortcuts, dialogs, languages, platforms, layout) |
 | 2026-10-25 | minor | Ready for real work measured: 66.1% (`cargo xtask readiness`, 222 real-world documents) replaces the ~60% estimate; file-format, layout and file-exchange evidence from the corpus |
 | 2026-10-25 | trivial | Layout and file-exchange rows: Aptos drawn with the metric-compatible Intos; Aptos substitute removed from the human-time list |
