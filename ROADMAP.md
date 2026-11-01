@@ -122,10 +122,8 @@ Proofing: English and Polish (spelling, grammar, hyphenation), chosen per run fr
 
 Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadmap.md)):
 
-0. Raise measured readiness from 86.0% (66.1% at first; 73.4% in the stale 2026-10-25 report) to 100%: fix what `cargo xtask readiness` fails, most
-   points first: pagination (6.7 points open), dialogs (3.0), interface languages (2.7), then
-   the remaining formats, shortcuts, platform, ecosystem and hardware checks; 26 deferred rows
-   remain owner-bound ([results](docs/readiness.md),
+0. Raise measured readiness from 86.0% (66.1% at first; 73.4% in the stale 2026-10-25 report) to 100% without the 26 deferred rows: the current run passes 162/222 page counts and 87/222 page-boundary checks, 187/228 dialogs (12 deferred), and 30/95 languages. Prioritize pagination, then dialogs and genuine interface translations; keep all deferred rows owner-bound unless the owner supplies evidence or asks to test them
+   ([results](docs/readiness.md),
    [plan](docs/roadmap.md#path-to-100-measured-readiness)).
 1. Keep following WordCraft, upstream: its ~45 open PRs close gaps and are taken over as they
    land. In this repository, the four open Dependabot PRs (GitHub Actions updates) wait on the owner.
@@ -146,7 +144,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
-| 2026-11-01 | Mapped three classic toolbar/menu dialogs to the tested Word 365 replacement, Customize Ribbon; dialogs 187/228 and readiness 86.0% (88.5% without 26 deferred). |
+| 2026-11-01 | Mapped three classic toolbar/menu dialogs to the tested Word 365 replacement, Customize Ribbon; dialogs 187/228 and readiness 86.0% (88.5% without 26 deferred). Verified by `customize_ribbon_opens_and_the_layout_persists` and the full 222-document readiness corpus; commit `3f9b4f3`, report refreshed in `4a7e28d`. |
 | 2026-11-01 | Mapped the legacy `wdDialogToolsAdvancedSettings` check to Doc4Me's tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without 26 deferred). |
 | 2026-11-01 | Verified `eco-003` with Syncthing 2.1.7: Doc4Me created a DOCX in peer A's synced folder, opened and saved it in place on peer B, and both edits were verified after sync/reopen. Ecosystem is 5/6 (one deferred); readiness rises to 85.7% (88.2% without 26 deferred). |
 | 2026-11-01 | Fixed a leading page break in a table row creating a blank page; `govuk-003` now matches the reference page count (5), while its page-boundary check remains different. Full corpus readiness remains 85.4% (87.8% without 26 deferred); page counts rise to 162/222 and page breaks remain 87/222. |

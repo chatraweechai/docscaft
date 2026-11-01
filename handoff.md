@@ -1,8 +1,8 @@
 # Handoff: Doc4Me 1.1.1 · readiness 86.0% (งานใหม่อยู่ใต้ `[Unreleased]` ห้ามออกเวอร์ชันจนกว่าผู้ใช้จะสั่ง)
 
-อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 16 · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
+อัปเดต: 2026-11-01 · สาขา `main` · รอบที่ 17 · HEAD `4a7e28d` · เวอร์ชันยังเป็น 1.1.1 ห้ามออกรุ่นใหม่จนกว่าผู้ใช้สั่ง · อ่านหัวข้อ "สถานะปัจจุบัน" ก่อน ส่วนที่อยู่ใต้ลงไปเป็นประวัติ
 
-## สถานะปัจจุบัน (2026-11-01 รอบที่ 14)
+## สถานะปัจจุบัน (2026-11-01 รอบที่ 17)
 
 ### Readiness ล่าสุด: 86.0% (วัดครบ 222 เอกสาร, 2026-11-01)
 
@@ -22,6 +22,14 @@
 คะแนนเมื่อไม่นับ 26 แถว deferred = 88.5%; ยังไม่ถึง 100% เพราะยังมีความคลาดเคลื่อนด้าน pagination, dialog และภาษา รวมถึงการตรวจที่ต้องใช้ฮาร์ดแวร์/แพลตฟอร์มของเจ้าของ repo; ไม่เปลี่ยนสถานะ deferred โดยไม่มีหลักฐานหรือคำสั่งตรงตามกติกา. `dlg-040` ถูกตัดออกจาก check set เพราะเป็น Macintosh-only ตามเอกสารอ้างอิง ไม่ใช่การทำเครื่องหมายผ่าน. ไฟล์ผล generated อยู่ใน `docs/readiness.md`.
 
 รอบนี้เชื่อม `dlg-144`, `dlg-189` และ `dlg-190` (New Toolbar, Customize Menu Bar และ Customize Menus แบบคลาสสิก) กับ `tools.customizeRibbon`; Word 365 ใช้ ribbon แทน menu bar และ Doc4Me มี custom tabs, groups และ command placement. UI regression `customize_ribbon_opens_and_the_layout_persists` ผ่าน. Dialog checks เพิ่ม 184→187/228; readiness 86.0% (88.5% ไม่มี deferred), corpus ยัง 222/222 เปิดและ round-trip, pagination 162/222 page counts และ 87/222 page boundaries. ตรวจ: `cargo test -p doc4me-ui-egui --lib customize_ribbon_opens_and_the_layout_persists` และ `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` ผ่าน.
+
+### งานต่อไป (ยังไม่ถึงเป้าหมาย 100%)
+
+1. **Pagination ก่อน**: 162/222 page counts และ 87/222 page-boundary checks ผ่าน; ใน readiness ปัจจุบันยังตก 60 page counts และ 135 page-boundary checks. เริ่มตรวจ `govuk-005` (Doc4Me 40 หน้า, Word reference 36) และแยกสาเหตุระดับเอกสาร/ตาราง/ฟอนต์ก่อนเปลี่ยนกฎ layout; อย่าปรับ comparator หรือรับผลเมื่อ DOCX กับ reference เป็นคนละรุ่น.
+2. **Dialogs**: ผ่าน 187/228; 41 แถวไม่ผ่านรวม 12 deferred (จึงมี 29 แถวที่ยังต้องตรวจ/ทำจริง). เติม mapping เฉพาะเมื่อมี UI/command ที่ทำงานเทียบเท่าจริงและมี regression test.
+3. **Localization**: ผ่าน 30/95; อีก 65 ภาษาไม่มี catalog ที่ผ่านเกณฑ์. ต้องเพิ่มคำแปลจริงและตรวจ coverage; ห้ามนับ English fallback หรือ mapping ที่ไม่มี catalog เป็นผ่าน.
+4. รัน `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` หลังการแก้แต่ละช่วง, ปรับ readiness/gap/parity documents และ `CHANGELOG.md` ตามผลจริง, แล้ว commit/push `main`; คง 26 owner-deferred checks ไว้ตามสถานะจนกว่าจะมีหลักฐานหรือคำสั่งจากเจ้าของ.
+5. งานรอบนี้จบตามคำขอให้หยุดหลังบันทึกสถานะ; readiness ยังไม่ใช่ 100% (86.0% รวม, 88.5% เมื่อตัด 26 deferred) และยังไม่มีการอ้างว่าทำเป้าหมายสำเร็จ.
 
 รอบนี้เชื่อม `dlg-177` (`wdDialogToolsAdvancedSettings`) กับ `file.options` โดยมี `pane=advanced`; File › Options มี Advanced pane จริงและ UI regression `options_panes_open_and_change_settings` ตรวจการเปิด pane และเปลี่ยนค่าได้. จำนวน dialog ผ่านเพิ่ม 183→184/228; readiness 85.8% (88.3% ไม่มี deferred), corpus ยัง 222/222 เปิดและ round-trip, pagination 162/222 page counts และ 87/222 page boundaries. ตรวจ: `cargo test -p doc4me-ui-egui --lib options_panes_open_and_change_settings` และ `cargo xtask readiness --corpus --jobs 4 --cli target\\release\\doc4me-cli.exe` ผ่าน.
 
